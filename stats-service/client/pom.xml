@@ -11,6 +11,7 @@
 
     <groupId>ru.practicum.statsservice</groupId>
     <artifactId>client</artifactId>
+    <name>stats-service-client</name>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
