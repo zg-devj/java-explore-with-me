@@ -11,7 +11,11 @@ import ru.practicum.statsservice.library.EndpointHitDto;
 @Service
 public class StatsClient {
 
-    public ResponseEntity<EndpointHitDto> hit(@Value("${shareit-server.url}") String serverUrl, EndpointHitDto body) {
+    @Value("${stats-service.server.url}")
+    private String serverUrl;
+
+    //    public ResponseEntity<EndpointHitDto> hit(@Value("${shareit-server.url}") String serverUrl, EndpointHitDto body) {
+    public ResponseEntity<EndpointHitDto> hit(EndpointHitDto body) {
         RestTemplate rest = new RestTemplate();
         String url = serverUrl + "/hit";
         HttpEntity<EndpointHitDto> requestEntity = new HttpEntity<>(body);
