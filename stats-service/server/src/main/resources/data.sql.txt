@@ -1,17 +1,17 @@
 insert into statistics (app, uri, ip, timestamp)
-values ('main-service', '/events/1', '192.168.100.10', '2023-06-28T12:01:01');
+values ('main-service', '/events/1', '127.0.0.1', '2023-06-28T12:01:01');
 
 insert into statistics (app, uri, ip, timestamp)
-values ('main-service', '/events/1', '192.168.100.20', '2023-06-28T12:02:01');
+values ('main-service', '/events/1', '127.0.0.1', '2023-06-28T12:02:01');
 
 insert into statistics (app, uri, ip, timestamp)
-values ('main-service', '/events/1', '192.168.100.30', '2023-06-28T12:03:01');
+values ('main-service', '/events/1', '127.0.0.2', '2023-06-28T12:03:01');
 
 insert into statistics (app, uri, ip, timestamp)
-values ('main-service', '/events/2', '192.168.100.10', '2023-06-28T12:04:01');
+values ('main-service', '/events/2', '127.0.0.1', '2023-06-28T12:04:01');
 
 insert into statistics (app, uri, ip, timestamp)
-values ('main-service', '/events/2', '192.168.100.20', '2023-06-28T12:05:01');
+values ('main-service', '/events/2', '127.0.0.2', '2023-06-28T12:05:01');
 
 insert into statistics (app, uri, ip, timestamp)
-values ('main-service', '/events/2', '192.168.100.30', '2023-06-28T12:06:01');
+values ('main-service', '/events/3', '127.0.0.1', '2023-06-28T12:06:01');

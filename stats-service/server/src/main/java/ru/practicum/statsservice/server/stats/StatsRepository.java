@@ -24,7 +24,7 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
                                Pageable pageable);
 
     // without uri, unique ip
-    @Query("select new ru.practicum.statsservice.library.ViewStatsDto(s.app,s.uri,count(s.uri)) " +
+    @Query("select new ru.practicum.statsservice.library.ViewStatsDto(s.app,s.uri,count(distinct(s.uri))) " +
             "from Stats as s " +
             "where s.timestamp between :start and :end " +
             "group by s.app, s.uri, s.ip " +
@@ -43,7 +43,7 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
                                     @Param("uris") List<String> uris, Pageable pageable);
 
     // with uri, unique ip
-    @Query("select new ru.practicum.statsservice.library.ViewStatsDto(s.app,s.uri,count(s.uri)) " +
+    @Query("select new ru.practicum.statsservice.library.ViewStatsDto(s.app,s.uri,count(distinct(s.uri))) " +
             "from Stats as s " +
             "where s.uri in :uris and s.timestamp between :start and :end " +
             "group by s.app, s.uri, s.ip " +
