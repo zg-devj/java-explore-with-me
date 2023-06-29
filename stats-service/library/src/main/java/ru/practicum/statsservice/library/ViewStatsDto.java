@@ -3,9 +3,11 @@ package ru.practicum.statsservice.library;
 import lombok.Builder;
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
 @Builder
-public class ViewStatsDto {
+public class ViewStatsDto implements Serializable {
     private String app;
     private String uri;
     private Long hits;

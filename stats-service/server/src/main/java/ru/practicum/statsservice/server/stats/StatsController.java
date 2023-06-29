@@ -28,7 +28,7 @@ public class StatsController {
     }
 
     @GetMapping("/stats")
-    public ResponseEntity<List<ViewStatsDto>> stats(
+    public List<ViewStatsDto> stats(
             @RequestParam String start,
             @RequestParam String end,
             @RequestParam(required = false) List<String> uris,
@@ -38,8 +38,7 @@ public class StatsController {
         LocalDateTime startD = decodedDateTime(start);
         LocalDateTime endD = decodedDateTime(end);
 
-        List<ViewStatsDto> list = statsService.stats(startD, endD, uris, unique, pageable);
-        return ResponseEntity.ok(list);
+        return statsService.stats(startD, endD, uris, unique, pageable);
     }
 
     private LocalDateTime decodedDateTime(String datetime) {

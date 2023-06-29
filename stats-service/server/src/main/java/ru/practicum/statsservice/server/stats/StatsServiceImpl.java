@@ -32,16 +32,16 @@ public class StatsServiceImpl implements StatsService {
                                     List<String> uris, boolean unique, Pageable pageable) {
         PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
         if (unique) {
-            if (uris != null) {
-                return statsRepository.findResUniqueIPInUri(start, end, uris, pageRequest).getContent();
-            } else {
+            if (uris == null || uris.isEmpty()) {
                 return statsRepository.findResUniqueIP(start, end, pageRequest).getContent();
+            } else {
+                return statsRepository.findResUniqueIPInUri(start, end, uris, pageRequest).getContent();
             }
         } else {
-            if (uris != null) {
-                return statsRepository.findResInUri(start, end, uris, pageRequest).getContent();
-            } else {
+            if (uris == null || uris.isEmpty()) {
                 return statsRepository.findRes(start, end, pageRequest).getContent();
+            } else {
+                return statsRepository.findResInUri(start, end, uris, pageRequest).getContent();
             }
         }
 
