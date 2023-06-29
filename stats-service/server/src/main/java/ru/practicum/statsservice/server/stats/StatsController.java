@@ -3,7 +3,6 @@ package ru.practicum.statsservice.server.stats;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.statsservice.library.EndpointHitDto;
 import ru.practicum.statsservice.library.ViewStatsDto;
@@ -23,8 +22,9 @@ public class StatsController {
     private final StatsService statsService;
 
     @PostMapping("/hit")
-    public ResponseEntity<EndpointHitDto> hit(@RequestBody @Valid EndpointHitDto hitDto) {
-        return new ResponseEntity<>(statsService.hit(hitDto), HttpStatus.CREATED);
+    @ResponseStatus(HttpStatus.CREATED)
+    public EndpointHitDto hit(@RequestBody @Valid EndpointHitDto hitDto) {
+        return statsService.hit(hitDto);
     }
 
     @GetMapping("/stats")

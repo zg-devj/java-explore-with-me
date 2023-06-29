@@ -32,7 +32,6 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
     Page<ViewStatsDto> findResUniqueIP(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end,
                                        Pageable pageable);
 
-
     // with uri
     @Query("select new ru.practicum.statsservice.library.ViewStatsDto(s.app,s.uri,count(s.uri)) " +
             "from Stats as s " +
