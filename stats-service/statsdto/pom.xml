@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>ru.practicum.statsservice</groupId>
-    <artifactId>library</artifactId>
+    <artifactId>statsdto</artifactId>
     <name>stats-service-library</name>
 
     <properties>
