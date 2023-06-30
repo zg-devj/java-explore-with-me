@@ -1,4 +1,4 @@
-package ru.practicum.statsservice.library;
+package ru.practicum.statsservice.common;
 
 import lombok.Builder;
 import lombok.Data;

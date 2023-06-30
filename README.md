@@ -1,2 +1,18 @@
-# java-explore-with-me
-Template repository for ExploreWithMe project.
+# Explore With Me
+
+![](https://img.shields.io/github/languages/count/zg-devj/java-explore-with-me)
+![](https://img.shields.io/github/languages/code-size/zg-devj/java-explore-with-me)
+
+### Описание
+Приложение ExploreWithMe (англ. «исследуй со мной») позволит пользователям делиться информацией об интересных событиях и находить компанию для участия в них.
+
+### Fix / Update
+
+#### 2023-06-27
+- [x] разработка сервиса статистики
+#### 2023-06-28
+- [x] разработка клиента сервиса статистики
+#### 2023-06-29
+- [x] рефакторинг
+#### 2023-06-30
+- [] подготовка и проработка структуры основного проекта приложения 

@@ -5,8 +5,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.statsservice.library.EndpointHitDto;
-import ru.practicum.statsservice.library.ViewStatsDto;
+import ru.practicum.statsservice.common.EndpointHitDto;
+import ru.practicum.statsservice.common.ViewStatsDto;
 import ru.practicum.statsservice.server.stats.mapper.StatsMapper;
 
 import java.time.LocalDateTime;

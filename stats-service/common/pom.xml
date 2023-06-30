@@ -10,8 +10,8 @@
     </parent>
 
     <groupId>ru.practicum.statsservice</groupId>
-    <artifactId>statsdto</artifactId>
-    <name>stats-service-library</name>
+    <artifactId>common</artifactId>
+    <name>stats-service-common</name>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>

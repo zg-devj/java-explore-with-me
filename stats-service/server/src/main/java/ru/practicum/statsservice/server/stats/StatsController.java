@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.statsservice.library.EndpointHitDto;
-import ru.practicum.statsservice.library.ViewStatsDto;
+import ru.practicum.statsservice.common.EndpointHitDto;
+import ru.practicum.statsservice.common.ViewStatsDto;
 
 import javax.validation.Valid;
 import java.net.URLDecoder;

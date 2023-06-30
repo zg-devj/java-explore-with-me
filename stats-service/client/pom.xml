@@ -34,7 +34,7 @@
         </dependency>
         <dependency>
             <groupId>ru.practicum.statsservice</groupId>
-            <artifactId>statsdto</artifactId>
+            <artifactId>common</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
