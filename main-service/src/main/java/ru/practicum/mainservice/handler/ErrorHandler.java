@@ -11,10 +11,7 @@ import ru.practicum.mainservice.exceptions.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 @Slf4j
 @RestControllerAdvice
@@ -70,9 +67,9 @@ public class ErrorHandler {
     // 409
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ApiError handleObjectAlreadyExistException(HttpServletResponse response, ObjectAlreadyExistException e) {
+    public ApiError handleObjectAlreadyExistException(ConflictException e) {
         log.warn(e.getMessage());
-        return new ApiError(HttpStatus.CONFLICT.name(), "Ограничение целостности было нарушено.", e.getMessage(),
+        return new ApiError(HttpStatus.CONFLICT.name(), e.getReason(), e.getMessage(),
                 Collections.emptyList());
     }
 

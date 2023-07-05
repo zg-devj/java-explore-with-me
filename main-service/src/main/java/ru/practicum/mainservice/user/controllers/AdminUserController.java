@@ -33,12 +33,12 @@ public class AdminUserController {
         log.info("GET /admin/users?ids={}&from={}&size={} - Получение информации о пользователях.",
                 ids, from, size);
 
-        return null;
+        return userService.findUsers(ids, from, size);
     }
 
     // Добавление нового пользователя
     @PostMapping
-//    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.CREATED)
     public UserDto adminAddUser(
             @RequestBody @Valid NewUserRequest newUserRequest
     ) {

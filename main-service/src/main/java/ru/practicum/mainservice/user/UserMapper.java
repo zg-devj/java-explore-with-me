@@ -5,6 +5,9 @@ import lombok.NoArgsConstructor;
 import ru.practicum.mainservice.user.dto.NewUserRequest;
 import ru.practicum.mainservice.user.dto.UserDto;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserMapper {
     public static User newUserRequestToUser(NewUserRequest newUserRequest) {
@@ -20,5 +23,11 @@ public class UserMapper {
                 .email(user.getEmail())
                 .name(user.getName())
                 .build();
+    }
+
+    public static List<UserDto> userToUserDto(List<User> users) {
+        return users.stream()
+                .map(UserMapper::userToUserDto)
+                .collect(Collectors.toList());
     }
 }

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 /**
@@ -20,6 +21,7 @@ public class NewUserRequest {
     private String email;
 
     // Имя
+    @NotBlank
     @Size(min = 2, max = 250)
     private String name;
 }

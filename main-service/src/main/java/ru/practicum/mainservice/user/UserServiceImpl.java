@@ -3,14 +3,18 @@ package ru.practicum.mainservice.user;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.mainservice.exceptions.NotFoundException;
-import ru.practicum.mainservice.exceptions.ObjectAlreadyExistException;
+import ru.practicum.mainservice.exceptions.ConflictException;
+import ru.practicum.mainservice.user.criteria.UserSpecs;
 import ru.practicum.mainservice.user.dto.NewUserRequest;
 import ru.practicum.mainservice.user.dto.UserDto;
 
 import java.util.List;
+
+import static ru.practicum.mainservice.utils.Utils.getPageRequest;
 
 @Service
 @Transactional(readOnly = true)
@@ -21,7 +25,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> findUsers(List<Long> ids, int from, int size) {
-        return null;
+        PageRequest pageRequest = getPageRequest(from, size);
+        return UserMapper.userToUserDto(userRepository.findAll(UserSpecs.isIdsIn(ids), pageRequest).toList());
     }
 
     @Override
@@ -32,7 +37,7 @@ public class UserServiceImpl implements UserService {
             User savedUser = userRepository.save(newUser);
             return UserMapper.userToUserDto(savedUser);
         } catch (DataIntegrityViolationException e) {
-            throw new ObjectAlreadyExistException(e.getMessage());
+            throw new ConflictException("Ограничение целостности было нарушено.", e.getMessage());
         }
     }
 
@@ -42,7 +47,7 @@ public class UserServiceImpl implements UserService {
         try {
             userRepository.deleteById(userId);
         } catch (EmptyResultDataAccessException e) {
-            throw new NotFoundException(String.format("Пользователь c id=%d не найден", userId));
+            throw new NotFoundException(String.format("Пользователь c id=%d не найден.", userId));
         }
     }
 }
