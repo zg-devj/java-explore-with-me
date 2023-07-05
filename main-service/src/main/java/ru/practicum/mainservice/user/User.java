@@ -1,15 +1,13 @@
 package ru.practicum.mainservice.user;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
 /**
  * Пользователь
  */
+@Builder
 @Setter
 @Getter
 @NoArgsConstructor

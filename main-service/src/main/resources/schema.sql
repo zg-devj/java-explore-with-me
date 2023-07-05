@@ -1,21 +1,21 @@
 -- для тестирования
-drop table if exists compilation_event;
-drop table if exists compilations;
-drop table if exists requests;
-drop table if exists events;
-drop table if exists categories;
+-- drop table if exists compilation_event;
+-- drop table if exists compilations;
+-- drop table if exists requests;
+-- drop table if exists events;
+-- drop table if exists categories;
 drop table if exists users;
-drop table if exists locations;
+-- drop table if exists locations;
 
 -- локации
-create table if not exists locations
-(
-    id  bigint generated always as identity,
-    lat real not null,
-    lon real not null,
-    constraint pk_locations primary key (id),
-    constraint uq_locations_lat_lon unique (lat, lon)
-);
+-- create table if not exists locations
+-- (
+--     id  bigint generated always as identity,
+--     lat real not null,
+--     lon real not null,
+--     constraint pk_locations primary key (id),
+--     constraint uq_locations_lat_lon unique (lat, lon)
+-- );
 
 -- пользователи
 create table if not exists users
@@ -27,67 +27,67 @@ create table if not exists users
     constraint uq_users_email unique (email)
 );
 
--- категории
-create table if not exists categories
-(
-    id   bigint generated always as identity,
-    name varchar(50) not null,
-    constraint pk_categories primary key (id),
-    constraint uq_categories_name unique (name)
-);
-
--- события
-create table if not exists events
-(
-    id                 bigint generated always as identity,
-    title              varchar(120)                not null,
-    user_id            bigint                      not null,
-    category_id        bigint                      not null,
-    location_id        bigint                      not null,
-    annotation         varchar(2000)               not null,
-    description        varchar(7000)               not null,
-    created_on         timestamp without time zone          default now(),
-    event_date         timestamp without time zone not null,
-    published_on       timestamp without time zone          default null,
-    paid               boolean                     not null default false,
-    participant_limit  int                         not null default 0,
-    request_moderation boolean                     not null default true,
-    state              varchar(9)                  not null default 'PENDING',
-    constraint pk_events primary key (id),
-    constraint fk_events_users foreign key (user_id) references users (id),
-    constraint fk_events_categories foreign key (category_id) references categories (id),
-    constraint fk_events_locations foreign key (location_id) references locations (id)
-);
-
-create table if not exists requests
-(
-    id           bigint generated always as identity,
-    created      timestamp without time zone default now(),
-    event_id     bigint     not null,
-    requester_id bigint     not null,
-    status       varchar(9) not null         default 'PENDING',
-    constraint pk_requests primary key (id),
-    constraint fk_requests_events foreign key (event_id) references events (id),
-    constraint fk_requests_users foreign key (requester_id) references users (id)
-);
-
-create table if not exists compilations
-(
-    id     bigint generated always as identity,
-    title  varchar(50) not null,
-    pinned boolean     not null default false,
-    constraint pk_compilations primary key (id),
-    constraint uq_compilations_title unique (title)
-);
-
-create table if not exists compilation_event
-(
-    compilation_id bigint not null
-        constraint compilation_event_compilations_fk references compilations,
-    event_id       bigint not null
-        constraint compilation_event_events_fk references events,
-    constraint uq_compilation_event unique (compilation_id, event_id)
-);
+-- -- категории
+-- create table if not exists categories
+-- (
+--     id   bigint generated always as identity,
+--     name varchar(50) not null,
+--     constraint pk_categories primary key (id),
+--     constraint uq_categories_name unique (name)
+-- );
+--
+-- -- события
+-- create table if not exists events
+-- (
+--     id                 bigint generated always as identity,
+--     title              varchar(120)                not null,
+--     user_id            bigint                      not null,
+--     category_id        bigint                      not null,
+--     location_id        bigint                      not null,
+--     annotation         varchar(2000)               not null,
+--     description        varchar(7000)               not null,
+--     created_on         timestamp without time zone          default now(),
+--     event_date         timestamp without time zone not null,
+--     published_on       timestamp without time zone          default null,
+--     paid               boolean                     not null default false,
+--     participant_limit  int                         not null default 0,
+--     request_moderation boolean                     not null default true,
+--     state              varchar(9)                  not null default 'PENDING',
+--     constraint pk_events primary key (id),
+--     constraint fk_events_users foreign key (user_id) references users (id),
+--     constraint fk_events_categories foreign key (category_id) references categories (id),
+--     constraint fk_events_locations foreign key (location_id) references locations (id)
+-- );
+--
+-- create table if not exists requests
+-- (
+--     id           bigint generated always as identity,
+--     created      timestamp without time zone default now(),
+--     event_id     bigint     not null,
+--     requester_id bigint     not null,
+--     status       varchar(9) not null         default 'PENDING',
+--     constraint pk_requests primary key (id),
+--     constraint fk_requests_events foreign key (event_id) references events (id),
+--     constraint fk_requests_users foreign key (requester_id) references users (id)
+-- );
+--
+-- create table if not exists compilations
+-- (
+--     id     bigint generated always as identity,
+--     title  varchar(50) not null,
+--     pinned boolean     not null default false,
+--     constraint pk_compilations primary key (id),
+--     constraint uq_compilations_title unique (title)
+-- );
+--
+-- create table if not exists compilation_event
+-- (
+--     compilation_id bigint not null
+--         constraint compilation_event_compilations_fk references compilations,
+--     event_id       bigint not null
+--         constraint compilation_event_events_fk references events,
+--     constraint uq_compilation_event unique (compilation_id, event_id)
+-- );
 
 -- CREATE OR REPLACE FUNCTION distance(lat1 float, lon1 float, lat2 float, lon2 float)
 --     RETURNS float

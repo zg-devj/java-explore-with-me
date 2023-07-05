@@ -1,11 +1,14 @@
 package ru.practicum.mainservice.user.controllers;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.mainservice.user.UserService;
 import ru.practicum.mainservice.user.dto.NewUserRequest;
 import ru.practicum.mainservice.user.dto.UserDto;
 
+import javax.validation.Valid;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
@@ -14,8 +17,11 @@ import java.util.List;
  */
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/admin/users")
 public class AdminUserController {
+
+    private final UserService userService;
 
     // Получение информации о пользователях
     @GetMapping
@@ -31,12 +37,12 @@ public class AdminUserController {
 
     // Добавление нового пользователя
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
+//    @ResponseStatus(HttpStatus.CREATED)
     public UserDto adminAddUser(
-            @RequestBody NewUserRequest newUserRequest
+            @RequestBody @Valid NewUserRequest newUserRequest
     ) {
         log.info("POST /admin/users - Добавление нового пользователя.");
-        return null;
+        return userService.createUser(newUserRequest);
     }
 
     // Удаление пользователя
@@ -46,5 +52,6 @@ public class AdminUserController {
             @PathVariable long userId
     ) {
         log.info("DELETE /admin/users/{} - Удаление пользователя.", userId);
+        userService.deleteUser(userId);
     }
 }

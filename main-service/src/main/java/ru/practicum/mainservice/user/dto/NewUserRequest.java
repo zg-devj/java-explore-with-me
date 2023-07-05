@@ -1,19 +1,25 @@
 package ru.practicum.mainservice.user.dto;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Size;
 
 /**
  * Данные нового пользователя
  */
+@Builder
+@Getter
+@Setter
 public class NewUserRequest {
     // Почтовый адрес (unique)
-    @Min(6)
-    @Max(256)
+    @Size(min = 6, max = 256)
+    @Email
     private String email;
 
     // Имя
-    @Min(2)
-    @Max(250)
+    @Size(min = 2, max = 250)
     private String name;
 }
