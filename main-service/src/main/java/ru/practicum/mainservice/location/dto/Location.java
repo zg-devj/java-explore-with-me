@@ -1,4 +1,4 @@
-package ru.practicum.mainservice.event.dto;
+package ru.practicum.mainservice.location.dto;
 
 /**
  *

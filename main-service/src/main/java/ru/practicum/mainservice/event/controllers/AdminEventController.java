@@ -1,4 +1,4 @@
-package ru.practicum.mainservice.controllers.admin;
+package ru.practicum.mainservice.event.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -6,6 +6,8 @@ import ru.practicum.mainservice.event.dto.EventFullDto;
 import ru.practicum.mainservice.event.dto.UpdateEventAdminRequest;
 
 import javax.validation.constraints.PositiveOrZero;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -14,7 +16,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/admin/events")
-public class EventController {
+public class AdminEventController {
 
     // Поиск событий
     @GetMapping

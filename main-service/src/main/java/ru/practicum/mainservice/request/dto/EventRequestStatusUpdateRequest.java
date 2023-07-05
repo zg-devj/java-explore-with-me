@@ -1,6 +1,6 @@
 package ru.practicum.mainservice.request.dto;
 
-import ru.practicum.mainservice.request.RequestState;
+import ru.practicum.mainservice.request.RequestStatus;
 
 import java.util.List;
 
@@ -13,5 +13,5 @@ public class EventRequestStatusUpdateRequest {
 
     // Новый статус запроса на участие в событии текущего пользователя
     // CONFIRMED, REJECTED
-    private RequestState status;
+    private RequestStatus status;
 }

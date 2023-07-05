@@ -1,6 +1,7 @@
 package ru.practicum.mainservice.event.dto;
 
 import ru.practicum.mainservice.event.EventStateAction;
+import ru.practicum.mainservice.location.dto.Location;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -16,7 +17,7 @@ public class UpdateEventUserRequest {
     private String annotation;
 
     // Новая категория
-    private Integer category;
+    private Long category;
 
     // Новое описание
     @Min(20)

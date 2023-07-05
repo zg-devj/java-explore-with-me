@@ -1,4 +1,4 @@
-package ru.practicum.mainservice.controllers.admin;
+package ru.practicum.mainservice.user.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -15,7 +15,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/admin/users")
-public class UserController {
+public class AdminUserController {
 
     // Получение информации о пользователях
     @GetMapping

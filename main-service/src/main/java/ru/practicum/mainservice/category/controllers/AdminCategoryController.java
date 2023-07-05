@@ -1,4 +1,4 @@
-package ru.practicum.mainservice.controllers.admin;
+package ru.practicum.mainservice.category.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -12,7 +12,7 @@ import ru.practicum.mainservice.category.dto.NewCategoryDto;
 @Slf4j
 @RestController
 @RequestMapping("/admin/categories")
-public class CategoryController {
+public class AdminCategoryController {
 
     // Добавление новой категории
     @PostMapping

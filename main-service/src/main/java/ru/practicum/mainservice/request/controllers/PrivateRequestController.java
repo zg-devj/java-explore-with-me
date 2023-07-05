@@ -1,4 +1,4 @@
-package ru.practicum.mainservice.controllers.individual;
+package ru.practicum.mainservice.request.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -13,7 +13,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/users")
-public class RequestController {
+public class PrivateRequestController {
 
     // Получение информации о заявках текущего пользователя на участие в чужих событиях
     @GetMapping("/{userId}/requests")

@@ -1,6 +1,6 @@
 package ru.practicum.mainservice.request.dto;
 
-import ru.practicum.mainservice.request.RequestState;
+import ru.practicum.mainservice.request.RequestStatus;
 
 /**
  * Заявка на участие в событии
@@ -19,5 +19,5 @@ public class ParticipationRequestDto {
     private Long requestor;
 
     // Статус заявки
-    private RequestState status;
+    private RequestStatus status;
 }

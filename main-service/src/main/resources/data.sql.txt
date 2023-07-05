@@ -1,0 +1,20 @@
+insert into users (name, email)
+values ('user', 'user@example.com'); -- 1
+
+insert into categories (name)
+values ('категория'); -- 1
+
+insert into locations (lat, lon)
+values (1, 1); -- 1
+
+insert into events (title, user_id, category_id, location_id, annotation, description, event_date)
+values ('event 1', 1, 1, 1, 'annotation', 'description', now()); -- 1
+
+insert into events (title, user_id, category_id, location_id, annotation, description, event_date)
+values ('event 2', 1, 1, 1, 'annotation', 'description', now()); -- 2
+
+insert into compilations (title, pinned)
+values ('подборка 1', true); -- 1
+
+insert into compilation_event (compilation_id, event_id)
+values (1, 1);

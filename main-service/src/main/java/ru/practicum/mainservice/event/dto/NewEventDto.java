@@ -1,5 +1,7 @@
 package ru.practicum.mainservice.event.dto;
 
+import ru.practicum.mainservice.location.dto.Location;
+
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;

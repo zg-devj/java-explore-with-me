@@ -1,4 +1,4 @@
-package ru.practicum.mainservice.controllers.opened;
+package ru.practicum.mainservice.event.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +14,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/events")
-public class EventController {
+public class PublicEventController {
 
     // Получение событий с возможностью фильтрации
     @GetMapping

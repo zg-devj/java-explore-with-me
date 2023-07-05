@@ -1,4 +1,4 @@
-package ru.practicum.mainservice.controllers.individual;
+package ru.practicum.mainservice.event.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/users")
-public class EventController {
+public class PrivateEventController {
 
     // Получение событий, добавленных текущим пользователем
     @GetMapping("/{userId}/events")

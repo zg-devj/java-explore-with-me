@@ -1,4 +1,4 @@
-package ru.practicum.mainservice.controllers.opened;
+package ru.practicum.mainservice.category.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +13,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/categories")
-public class CategoryController {
+public class PublicCategoryController {
 
     // Получение категорий
     @GetMapping

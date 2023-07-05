@@ -1,4 +1,4 @@
-package ru.practicum.mainservice.controllers.opened;
+package ru.practicum.mainservice.compilation.conrollers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +14,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/compilations")
-public class CompilationController {
+public class PublicCompilationController {
 
     // Получение подборок событий
     @GetMapping

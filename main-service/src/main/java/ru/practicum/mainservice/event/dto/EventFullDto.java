@@ -2,6 +2,7 @@ package ru.practicum.mainservice.event.dto;
 
 import ru.practicum.mainservice.category.dto.CategoryDto;
 import ru.practicum.mainservice.event.EventState;
+import ru.practicum.mainservice.location.dto.Location;
 import ru.practicum.mainservice.user.dto.UserShortDto;
 
 import javax.validation.constraints.NotNull;

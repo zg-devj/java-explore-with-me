@@ -1,4 +1,4 @@
-package ru.practicum.mainservice.controllers.admin;
+package ru.practicum.mainservice.compilation.conrollers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -13,7 +13,7 @@ import ru.practicum.mainservice.compilation.dto.UpdateCompilationRequest;
 @Slf4j
 @RestController
 @RequestMapping("/admin/compilations")
-public class CompilationController {
+public class AdminCompilationController {
 
     // Добавление новой подборки (подборка может не содержать событий)
     @PostMapping
