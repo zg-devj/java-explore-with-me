@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
             User savedUser = userRepository.save(newUser);
             return UserMapper.userToUserDto(savedUser);
         } catch (DataIntegrityViolationException e) {
-            throw new ObjectAlreadyExistException(e.getMessage(), "Ограничение целостности было нарушено.");
+            throw new ObjectAlreadyExistException(e.getMessage());
         }
     }
 
@@ -42,8 +42,7 @@ public class UserServiceImpl implements UserService {
         try {
             userRepository.deleteById(userId);
         } catch (EmptyResultDataAccessException e) {
-            throw new NotFoundException(String.format("Пользователь c id=%d не найден", userId),
-                    "Требуемый объект не был найден.");
+            throw new NotFoundException(String.format("Пользователь c id=%d не найден", userId));
         }
     }
 }

@@ -32,6 +32,7 @@ public class AdminUserController {
     ) {
         log.info("GET /admin/users?ids={}&from={}&size={} - Получение информации о пользователях.",
                 ids, from, size);
+
         return null;
     }
 

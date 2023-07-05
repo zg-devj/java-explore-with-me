@@ -6,14 +6,7 @@ package ru.practicum.mainservice.exceptions;
  */
 public class NotFoundException extends RuntimeException {
 
-    private final String response;
-
-    public NotFoundException(String message, String response) {
+    public NotFoundException(String message) {
         super(message);
-        this.response = response;
-    }
-
-    public String getResponse() {
-        return response;
     }
 }

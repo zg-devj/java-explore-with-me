@@ -5,14 +5,8 @@ package ru.practicum.mainservice.exceptions;
  * Для кода 409
  */
 public class ObjectAlreadyExistException extends RuntimeException {
-    private final String response;
 
-    public ObjectAlreadyExistException(String message, String response) {
+    public ObjectAlreadyExistException(String message) {
         super(message);
-        this.response = response;
-    }
-
-    public String getResponse() {
-        return response;
     }
 }

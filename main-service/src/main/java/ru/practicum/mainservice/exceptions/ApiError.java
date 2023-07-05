@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Сведения об ошибке
@@ -15,27 +16,27 @@ import java.time.LocalDateTime;
 @Setter
 public class ApiError {
 
-    // TODO: 01.07.2023 delete
-//    // Список стектрейсов или описания ошибок
-//    private List<String> errors;
-
     // Код статуса HTTP-ответа
-    private String status;
+    private final String status;
 
     // Общее описание причины ошибки
-    private String reason;
+    private final String reason;
 
-    // Сообщение об ошибке
-    private String message;
+    // Сообщение об ошибке e.getMessage()
+    private final String message;
 
     // Дата и время когда произошла ошибка (в формате "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private final LocalDateTime timestamp = LocalDateTime.now();
 
-    public ApiError(String status, String reason, String message) {
+    // Список StackTrace
+    private final List<String> errors;
+
+    public ApiError(String status, String reason, String message, List<String> errors) {
         this.status = status;
         this.reason = reason;
         this.message = message;
+        this.errors = errors;
     }
 }

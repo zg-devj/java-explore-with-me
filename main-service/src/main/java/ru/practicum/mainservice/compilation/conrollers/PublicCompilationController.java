@@ -24,7 +24,7 @@ public class PublicCompilationController {
             @RequestParam(required = false, defaultValue = "10") @PositiveOrZero int size
     ) {
         log.info("GET /compilations?pinned={}&from={}&size={} - Получение подборок событий.", pined, from, size);
-        throw new BadRequestException("my message", "Incorrectly made request.");
+        throw new BadRequestException("my message");
         //return null;
     }
 

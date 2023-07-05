@@ -6,14 +6,7 @@ package ru.practicum.mainservice.exceptions;
  */
 public class BadRequestException extends RuntimeException {
 
-    private final String response;
-
-    public BadRequestException(String message, String response) {
+    public BadRequestException(String message) {
         super(message);
-        this.response = response;
-    }
-
-    public String getResponse() {
-        return response;
     }
 }
