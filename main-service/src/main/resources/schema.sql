@@ -3,7 +3,7 @@
 -- drop table if exists compilations;
 -- drop table if exists requests;
 -- drop table if exists events;
--- drop table if exists categories;
+drop table if exists categories;
 drop table if exists users;
 -- drop table if exists locations;
 
@@ -27,15 +27,15 @@ create table if not exists users
     constraint uq_users_email unique (email)
 );
 
--- -- категории
--- create table if not exists categories
--- (
---     id   bigint generated always as identity,
---     name varchar(50) not null,
---     constraint pk_categories primary key (id),
---     constraint uq_categories_name unique (name)
--- );
---
+-- категории
+create table if not exists categories
+(
+    id   bigint generated always as identity,
+    name varchar(50) not null,
+    constraint pk_categories primary key (id),
+    constraint uq_categories_name unique (name)
+);
+
 -- -- события
 -- create table if not exists events
 -- (

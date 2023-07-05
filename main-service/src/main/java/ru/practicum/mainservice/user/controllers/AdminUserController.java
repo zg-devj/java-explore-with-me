@@ -30,7 +30,7 @@ public class AdminUserController {
             @RequestParam(required = false, defaultValue = "0") @PositiveOrZero int from,
             @RequestParam(required = false, defaultValue = "10") @PositiveOrZero int size
     ) {
-        log.info("GET /admin/users?ids={}&from={}&size={} - Получение информации о пользователях.",
+        log.info("GET /admin/users?ids={}&from={}&size={} - Getting information about all users.",
                 ids, from, size);
 
         return userService.findUsers(ids, from, size);
@@ -42,7 +42,7 @@ public class AdminUserController {
     public UserDto adminAddUser(
             @RequestBody @Valid NewUserRequest newUserRequest
     ) {
-        log.info("POST /admin/users - Добавление нового пользователя.");
+        log.info("POST /admin/users - Adding a new user.");
         return userService.createUser(newUserRequest);
     }
 
@@ -52,7 +52,7 @@ public class AdminUserController {
     public void adminRemoveUser(
             @PathVariable long userId
     ) {
-        log.info("DELETE /admin/users/{} - Удаление пользователя.", userId);
+        log.info("DELETE /admin/users/{} - Deleting a user.", userId);
         userService.deleteUser(userId);
     }
 }

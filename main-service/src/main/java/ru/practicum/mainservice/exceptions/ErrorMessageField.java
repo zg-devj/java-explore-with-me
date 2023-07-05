@@ -15,6 +15,6 @@ public class ErrorMessageField {
     }
 
     public String getErrorMessage() {
-        return "Field: " + field + ". Error: " + message + " ";
+        return "Field: " + field + ". Error: " + message + ". ";
     }
 }

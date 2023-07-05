@@ -1,7 +1,9 @@
 package ru.practicum.mainservice.category.controllers;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.mainservice.category.CategoryService;
 import ru.practicum.mainservice.category.dto.CategoryDto;
 
 import javax.validation.constraints.PositiveOrZero;
@@ -12,8 +14,11 @@ import java.util.List;
  */
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/categories")
 public class PublicCategoryController {
+
+    private final CategoryService categoryService;
 
     // Получение категорий
     @GetMapping
@@ -21,16 +26,16 @@ public class PublicCategoryController {
             @RequestParam(required = false, defaultValue = "0") @PositiveOrZero int from,
             @RequestParam(required = false, defaultValue = "10") @PositiveOrZero int size
     ) {
-        log.info("GET /categories?from={}&size={} - Получение категорий.", from, size);
-        return null;
+        log.info("GET /categories?from={}&size={} - Getting categories.", from, size);
+        return categoryService.findAllCategories(from, size);
     }
 
     // Получение информации о категории по её идентификатору
     @GetMapping("/{catId}")
     public CategoryDto getCategory(
-            @PathVariable long catId
+            @PathVariable Long catId
     ) {
-        log.info("GET /categories/{} - Получение информации о категории по её идентификатору.", catId);
-        return null;
+        log.info("GET /categories/{} - Getting information about a category by its ID.", catId);
+        return categoryService.findCategoryById(catId);
     }
 }

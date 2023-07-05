@@ -1,15 +1,13 @@
 package ru.practicum.mainservice.category;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
 /**
  * Категория
  */
+@Builder
 @Setter
 @Getter
 @AllArgsConstructor

@@ -1,36 +1,34 @@
 package ru.practicum.mainservice.category.controllers;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.mainservice.category.CategoryService;
 import ru.practicum.mainservice.category.dto.CategoryDto;
 import ru.practicum.mainservice.category.dto.NewCategoryDto;
+
+import javax.validation.Valid;
 
 /**
  * API для работы с категориями
  */
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/admin/categories")
 public class AdminCategoryController {
+
+    private final CategoryService categoryService;
 
     // Добавление новой категории
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CategoryDto adminAddCategory(
-            @RequestBody NewCategoryDto categoryDto
+            @RequestBody @Valid NewCategoryDto newCategoryDto
     ) {
-        log.info("GET /admin/categories - Добавление новой категории.");
-        return null;
-    }
-
-    // Удаление категории
-    @DeleteMapping("/{catId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void adminRemoveCategory(
-            @PathVariable long catId
-    ) {
-        log.info("DELETE /admin/categories/{} - Удаление категории.", catId);
+        log.info("GET /admin/categories - Adding a new category.");
+        return categoryService.createCategory(newCategoryDto);
     }
 
     // Изменение категории
@@ -39,7 +37,17 @@ public class AdminCategoryController {
             @PathVariable long catId,
             @RequestBody CategoryDto categoryDto
     ) {
-        log.info("PATCH /admin/categories/{} - Изменение категории.", catId);
-        return null;
+        log.info("PATCH /admin/categories/{} - Changing the category.", catId);
+        return categoryService.updateCategory(catId, categoryDto);
+    }
+
+    // Удаление категории
+    @DeleteMapping("/{catId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void adminRemoveCategory(
+            @PathVariable long catId
+    ) {
+        log.info("DELETE /admin/categories/{} - Deleting a category.", catId);
+        categoryService.deleteCategory(catId);
     }
 }

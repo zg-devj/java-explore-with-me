@@ -1,17 +1,19 @@
 package ru.practicum.mainservice.category.dto;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Категория
  */
+@Builder
+@Getter
+@Setter
 public class CategoryDto {
     // Идентификатор категории
     private Long id;
 
     //Название категории
-    @Min(1)
-    @Max(50)
     private String name;
 }
