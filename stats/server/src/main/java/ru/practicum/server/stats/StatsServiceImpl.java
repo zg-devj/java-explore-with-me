@@ -29,23 +29,22 @@ public class StatsServiceImpl implements StatsService {
 
     @Override
     public List<ViewStatsDto> stats(LocalDateTime start, LocalDateTime end,
-                                    List<String> uris, boolean unique, Pageable pageable) {
-        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
+                                    List<String> uris, boolean unique) {
         if (unique) {
             if (uris == null || uris.isEmpty()) {
                 return statsMapper.viewStatsToViewStatsDto(statsRepository
-                        .findResUniqueIP(start, end, pageRequest));
+                        .findResUniqueIP(start, end));
             } else {
                 return statsMapper.viewStatsToViewStatsDto(statsRepository.
-                        findResUniqueIPInUri(start, end, uris, pageRequest));
+                        findResUniqueIPInUri(start, end, uris));
             }
         } else {
             if (uris == null || uris.isEmpty()) {
                 return statsMapper.viewStatsToViewStatsDto(statsRepository.
-                        findRes(start, end, pageRequest));
+                        findRes(start, end));
             } else {
                 return statsMapper.viewStatsToViewStatsDto(statsRepository.
-                        findResInUri(start, end, uris, pageRequest));
+                        findResInUri(start, end, uris));
             }
         }
 

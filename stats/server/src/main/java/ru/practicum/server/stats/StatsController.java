@@ -32,13 +32,12 @@ public class StatsController {
             @RequestParam String start,
             @RequestParam String end,
             @RequestParam(required = false) List<String> uris,
-            @RequestParam(required = false, defaultValue = "false") boolean unique,
-            Pageable pageable
+            @RequestParam(required = false, defaultValue = "false") boolean unique
     ) {
         LocalDateTime startD = decodedDateTime(start);
         LocalDateTime endD = decodedDateTime(end);
 
-        return statsService.stats(startD, endD, uris, unique, pageable);
+        return statsService.stats(startD, endD, uris, unique);
     }
 
     private LocalDateTime decodedDateTime(String datetime) {

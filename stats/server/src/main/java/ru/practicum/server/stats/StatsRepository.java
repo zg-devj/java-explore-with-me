@@ -16,8 +16,7 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
             "where s.timestamp between :start and :end " +
             "group by s.app, s.uri " +
             "order by count(s.uri) desc")
-    List<ViewStats> findRes(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end,
-                               Pageable pageable);
+    List<ViewStats> findRes(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
     // without uri, unique ip
     @Query("select new ru.practicum.server.stats.ViewStats(s.app,s.uri,count(distinct(s.uri))) " +
@@ -25,8 +24,7 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
             "where s.timestamp between :start and :end " +
             "group by s.app, s.uri, s.ip " +
             "order by count(s.uri) desc")
-    List<ViewStats> findResUniqueIP(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end,
-                                       Pageable pageable);
+    List<ViewStats> findResUniqueIP(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
     // with uri
     @Query("select new ru.practicum.server.stats.ViewStats(s.app,s.uri,count(s.uri)) " +
@@ -35,7 +33,7 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
             "group by s.app, s.uri " +
             "order by count(s.uri) desc")
     List<ViewStats> findResInUri(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end,
-                                    @Param("uris") List<String> uris, Pageable pageable);
+                                    @Param("uris") List<String> uris);
 
     // with uri, unique ip
     @Query("select new ru.practicum.server.stats.ViewStats(s.app,s.uri,count(distinct(s.uri))) " +
@@ -44,5 +42,5 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
             "group by s.app, s.uri, s.ip " +
             "order by count(s.uri) desc")
     List<ViewStats> findResUniqueIPInUri(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end,
-                                            @Param("uris") List<String> uris, Pageable pageable);
+                                            @Param("uris") List<String> uris);
 }

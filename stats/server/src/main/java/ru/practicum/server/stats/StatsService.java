@@ -11,5 +11,5 @@ public interface StatsService {
     EndpointHitDto hit(EndpointHitDto hitDto);
 
     List<ViewStatsDto> stats(LocalDateTime start, LocalDateTime end,
-                             List<String> uris, boolean unique, Pageable pageable);
+                             List<String> uris, boolean unique);
 }
