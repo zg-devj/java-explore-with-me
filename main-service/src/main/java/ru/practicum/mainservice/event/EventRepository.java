@@ -9,7 +9,9 @@ import java.util.Optional;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
 
+    // получение списка событий инициатора
     List<Event> findEventsByUser(User user, Pageable pageable);
 
+    // получение события по id и инициатору
     Optional<Event> findFirstByIdAndUser(Long id, User initiator);
 }

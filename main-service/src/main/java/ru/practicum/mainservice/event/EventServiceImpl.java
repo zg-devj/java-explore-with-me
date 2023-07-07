@@ -40,7 +40,7 @@ public class EventServiceImpl implements EventService {
     @Transactional(readOnly = true)
     public List<EventShortDto> initiatorGetEvents(long userId, int from, int size) {
 
-        User initiator = getInitiator(userId);
+        User initiator = getUser(userId);
 
         PageRequest pageRequest = getPageRequest(from, size);
 
@@ -61,8 +61,7 @@ public class EventServiceImpl implements EventService {
                 .map(x -> "/events/" + x)
                 .collect(Collectors.toList());
 
-        List<ViewStats> stats = statsService.getStatsSearch(start, false, uris,
-                pageRequest.getPageNumber(), pageRequest.getPageSize());
+        List<ViewStats> stats = statsService.getStatsSearch(start, false, uris);
 
         return EventMapper.eventToEventShortDto(events, initiator, stats, listRequests);
     }
@@ -74,7 +73,7 @@ public class EventServiceImpl implements EventService {
         // проверяем время
         checkNewEventDate(newEventDto.getEventDate());
 
-        User initiator = getInitiator(userId);
+        User initiator = getUser(userId);
         Category category = getCategory(newEventDto.getCategory());
         Event newEvent = EventMapper.newEventDtoToEvent(newEventDto, initiator, category);
 
@@ -90,7 +89,7 @@ public class EventServiceImpl implements EventService {
     @Transactional(readOnly = true)
     public EventFullDto initiatorGetEvent(long userId, long eventId) {
 
-        User initiator = getInitiator(userId);
+        User initiator = getUser(userId);
 
         Event event = getEvent(eventId, initiator);
 
@@ -103,7 +102,7 @@ public class EventServiceImpl implements EventService {
 
         // TODO: 07.07.2023 maby need bad request somewhere
 
-        User initiator = getInitiator(userId);
+        User initiator = getUser(userId);
 
         Event event = getEvent(eventId, initiator);
 
@@ -189,7 +188,7 @@ public class EventServiceImpl implements EventService {
         LocalDateTime start = event.getCreatedOn();
         List<String> uris = List.of("/events/" + event.getId());
 
-        List<ViewStats> stats = statsService.getStatsSearch(start, false, uris, 0, 1);
+        List<ViewStats> stats = statsService.getStatsSearch(start, false, uris);
         long views = 0;
         if (stats != null && !stats.isEmpty()) {
             views = stats.get(0).getHits();
@@ -199,7 +198,7 @@ public class EventServiceImpl implements EventService {
     }
 
     // получение инициатора по id
-    private User getInitiator(long userId) {
+    private User getUser(long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(String.format("User with id=%d not found.",
                         userId)));
@@ -227,9 +226,8 @@ public class EventServiceImpl implements EventService {
      */
     private void checkNewEventDate(LocalDateTime newEventDate) {
         if (!newEventDate.isAfter(LocalDateTime.now().plusHours(2))) {
-            throw new ConflictException("Field: eventDate. Error: The date of the event cannot " +
-                    "be earlier than two hours from the current time",
-                    "The conditions are not met for the requested operation.");
+            throw new BadRequestException("Field: eventDate. Error: The date of the event cannot " +
+                    "be earlier than two hours from the current time");
         }
     }
 }

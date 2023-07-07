@@ -1,4 +1,4 @@
-package ru.practicum.mainservice.request.dto;
+package ru.practicum.mainservice.event.dto;
 
 import ru.practicum.mainservice.request.RequestStatus;
 

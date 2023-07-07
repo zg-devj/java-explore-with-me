@@ -9,8 +9,8 @@ import ru.practicum.mainservice.event.dto.EventFullDto;
 import ru.practicum.mainservice.event.dto.EventShortDto;
 import ru.practicum.mainservice.event.dto.NewEventDto;
 import ru.practicum.mainservice.event.dto.UpdateEventUserRequest;
-import ru.practicum.mainservice.request.dto.EventRequestStatusUpdateRequest;
-import ru.practicum.mainservice.request.dto.EventRequestStatusUpdateResult;
+import ru.practicum.mainservice.event.dto.EventRequestStatusUpdateRequest;
+import ru.practicum.mainservice.event.dto.EventRequestStatusUpdateResult;
 import ru.practicum.mainservice.request.dto.ParticipationRequestDto;
 
 import javax.validation.Valid;

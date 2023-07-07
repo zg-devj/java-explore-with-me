@@ -1,11 +1,17 @@
 package ru.practicum.mainservice.request;
 
+import lombok.*;
 import ru.practicum.mainservice.event.Event;
 import ru.practicum.mainservice.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Builder
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "requests")
 public class EventRequest {

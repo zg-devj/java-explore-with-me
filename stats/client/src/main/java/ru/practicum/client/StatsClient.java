@@ -34,9 +34,8 @@ public class StatsClient {
     }
 
     public ResponseEntity<Object> stats(LocalDateTime start, LocalDateTime end,
-                                        boolean unique, List<String> uris,
-                                        int page, int size) {
-        String url = serverUrl + "/stats?start={start}&end={end}&unique={unique}&uris={uris}&page={page}&size={size}";
+                                        boolean unique, List<String> uris) {
+        String url = serverUrl + "/stats?start={start}&end={end}&unique={unique}&uris={uris}";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         Map<String, Object> parameters = new HashMap<>();
@@ -51,8 +50,6 @@ public class StatsClient {
         } else {
             parameters.put("uris", String.join(",", uris));
         }
-        parameters.put("page", page);
-        parameters.put("size", size);
 
         return rest.exchange(url, HttpMethod.GET, null, Object.class, parameters);
     }

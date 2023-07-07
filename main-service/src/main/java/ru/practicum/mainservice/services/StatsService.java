@@ -19,11 +19,11 @@ public class StatsService {
 
     private final StatsClient client;
 
-    public List<ViewStats> getStatsSearch(LocalDateTime start, boolean unique, List<String> uris, int page, int size) {
+    public List<ViewStats> getStatsSearch(LocalDateTime start, boolean unique, List<String> uris) {
         // TODO: 07.07.2023 change year to hours
         LocalDateTime endS = LocalDateTime.now().plusYears(MINUS_INTERVAL);
 
-        Object statsList = client.stats(start.minusYears(PLUS_INTERVAL), endS, unique, uris, page, size).getBody();
+        Object statsList = client.stats(start.minusYears(PLUS_INTERVAL), endS, unique, uris).getBody();
         ObjectMapper mapper = new ObjectMapper();
         List<ViewStats> stats = mapper.convertValue(statsList, new TypeReference<List<ViewStats>>() {
         });

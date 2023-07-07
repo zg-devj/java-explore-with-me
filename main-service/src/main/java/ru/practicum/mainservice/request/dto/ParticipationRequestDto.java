@@ -1,13 +1,20 @@
 package ru.practicum.mainservice.request.dto;
 
+import lombok.*;
 import ru.practicum.mainservice.request.RequestStatus;
+
+import java.time.LocalDateTime;
 
 /**
  * Заявка на участие в событии
  */
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ParticipationRequestDto {
     // Дата и время создания заявки
-    private String created;
+    private LocalDateTime created;
 
     // Идентификатор события
     private Long event;

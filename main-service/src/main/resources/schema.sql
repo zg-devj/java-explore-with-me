@@ -67,7 +67,8 @@ create table if not exists requests
     status       varchar(9)                  not null default 'PENDING',
     constraint pk_requests primary key (id),
     constraint fk_requests_events foreign key (event_id) references events (id),
-    constraint fk_requests_users foreign key (requester_id) references users (id)
+    constraint fk_requests_users foreign key (requester_id) references users (id),
+    constraint uq_requests unique (event_id, requester_id)
 );
 --
 -- create table if not exists compilations
