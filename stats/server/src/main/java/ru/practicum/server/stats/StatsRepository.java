@@ -1,6 +1,5 @@
 package ru.practicum.server.stats;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,7 +16,7 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
             "where s.timestamp between :start and :end " +
             "group by s.app, s.uri " +
             "order by count(s.uri) desc")
-    Page<ViewStats> findRes(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end,
+    List<ViewStats> findRes(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end,
                                Pageable pageable);
 
     // without uri, unique ip
@@ -26,7 +25,7 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
             "where s.timestamp between :start and :end " +
             "group by s.app, s.uri, s.ip " +
             "order by count(s.uri) desc")
-    Page<ViewStats> findResUniqueIP(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end,
+    List<ViewStats> findResUniqueIP(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end,
                                        Pageable pageable);
 
     // with uri
@@ -35,7 +34,7 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
             "where s.uri in :uris and s.timestamp between :start and :end " +
             "group by s.app, s.uri " +
             "order by count(s.uri) desc")
-    Page<ViewStats> findResInUri(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end,
+    List<ViewStats> findResInUri(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end,
                                     @Param("uris") List<String> uris, Pageable pageable);
 
     // with uri, unique ip
@@ -44,6 +43,6 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
             "where s.uri in :uris and s.timestamp between :start and :end " +
             "group by s.app, s.uri, s.ip " +
             "order by count(s.uri) desc")
-    Page<ViewStats> findResUniqueIPInUri(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end,
+    List<ViewStats> findResUniqueIPInUri(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end,
                                             @Param("uris") List<String> uris, Pageable pageable);
 }

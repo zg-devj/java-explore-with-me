@@ -1,20 +1,65 @@
 insert into users (name, email)
-values ('user', 'user@example.com'); -- 1
+values ('user', 'user@example.com'); -- user 1
+
+insert into users (name, email)
+values ('requestor1', 'requestor1@example.com'); -- user 2
+
+insert into users (name, email)
+values ('requestor2', 'requestor2@example.com'); -- user 3
+
+insert into users (name, email)
+values ('requestor3', 'requestor3@example.com'); -- user 4
+
+insert into users (name, email)
+values ('requestor4', 'requestor4@example.com'); -- user 5
 
 insert into categories (name)
-values ('категория'); -- 1
+values ('сплавы'); -- category 1
 
-insert into locations (lat, lon)
-values (1, 1); -- 1
+insert into events (title, user_id, category_id, location_lat, location_lon, annotation, description, created_on,
+                    event_date, published_on, paid, participant_limit, request_moderation, state)
+values ('Сплав на байдарках 1', 1, 1, 55.754167, 37.62, 'Сплав на байдарках похож на полет.',
+        'Сплав на байдарках похож на полет. На спокойной воде — это парение. ' ||
+        'На бурной, порожистой — выполнение фигур высшего пилотажа. И то, и другое ' ||
+        'дарят чувство обновления, феерические эмоции, яркие впечатления.',
+        now(), now() + INTERVAL '1 day', null, true, 10, false, 'PENDING'); --1
 
-insert into events (title, user_id, category_id, location_id, annotation, description, event_date)
-values ('event 1', 1, 1, 1, 'annotation', 'description', now()); -- 1
+insert into events (title, user_id, category_id, location_lat, location_lon, annotation, description, created_on,
+                    event_date, published_on, paid, participant_limit, request_moderation, state)
+values ('Сплав на байдарках 2', 1, 1, 55.754167, 37.62, 'Сплав на байдарках похож на полет.',
+        'Сплав на байдарках похож на полет. На спокойной воде — это парение. ' ||
+        'На бурной, порожистой — выполнение фигур высшего пилотажа. И то, и другое ' ||
+        'дарят чувство обновления, феерические эмоции, яркие впечатления.',
+        now(), now() + INTERVAL '1 day', null, true, 10, false, 'PENDING'); --2
 
-insert into events (title, user_id, category_id, location_id, annotation, description, event_date)
-values ('event 2', 1, 1, 1, 'annotation', 'description', now()); -- 2
+insert into events (title, user_id, category_id, location_lat, location_lon, annotation, description, created_on,
+                    event_date, published_on, paid, participant_limit, request_moderation, state)
+values ('Сплав на байдарках 3', 1, 1, 55.754167, 37.62, 'Сплав на байдарках похож на полет.',
+        'Сплав на байдарках похож на полет. На спокойной воде — это парение. ' ||
+        'На бурной, порожистой — выполнение фигур высшего пилотажа. И то, и другое ' ||
+        'дарят чувство обновления, феерические эмоции, яркие впечатления.',
+        now(), now() + INTERVAL '1 day', null, true, 10, false, 'PENDING'); --3
 
-insert into compilations (title, pinned)
-values ('подборка 1', true); -- 1
+insert into requests (created, event_id, requester_id, status)
+values (now(), 3, 2, 'PENDING'); --1 - event 1
 
-insert into compilation_event (compilation_id, event_id)
-values (1, 1);
+insert into requests (created, event_id, requester_id, status)
+values (now(), 3, 3, 'CONFIRMED'); --2 - event 1
+
+insert into requests (created, event_id, requester_id, status)
+values (now(), 3, 4, 'CONFIRMED'); --3 - event 1
+
+insert into requests (created, event_id, requester_id, status)
+values (now(), 3, 5, 'REJECTED'); --3 - event 1
+
+-- insert into events (title, user_id, category_id, location_id, annotation, description, event_date)
+-- values ('event 1', 1, 1, 1, 'annotation', 'description', now()); -- 1
+--
+-- insert into events (title, user_id, category_id, location_id, annotation, description, event_date)
+-- values ('event 2', 1, 1, 1, 'annotation', 'description', now()); -- 2
+--
+-- insert into compilations (title, pinned)
+-- values ('подборка 1', true); -- 1
+--
+-- insert into compilation_event (compilation_id, event_id)
+-- values (1, 1);

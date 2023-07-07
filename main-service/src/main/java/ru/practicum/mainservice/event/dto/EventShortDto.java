@@ -1,14 +1,25 @@
 package ru.practicum.mainservice.event.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 import ru.practicum.mainservice.category.dto.CategoryDto;
 import ru.practicum.mainservice.user.dto.UserShortDto;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 /**
  * Краткая информация о событии
  */
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class EventShortDto {
     // Идентификатор события
     private Long id;
@@ -22,10 +33,12 @@ public class EventShortDto {
 
     // Дата и время на которые намечено событие (в формате "yyyy-MM-dd HH:mm:ss")
     @NotEmpty
-    private String eventDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime eventDate;
 
     // Нужно ли оплачивать участие
-    private boolean paid;
+    private Boolean paid;
 
     // Заголовок
     @NotEmpty

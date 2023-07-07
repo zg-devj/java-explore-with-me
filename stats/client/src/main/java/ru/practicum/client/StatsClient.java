@@ -6,6 +6,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import ru.practicum.common.EndpointHitDto;
+import ru.practicum.common.ViewStatsDto;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -46,8 +47,10 @@ public class StatsClient {
         // то на сервере статистики придет список с size=1,
         if (uris == null || uris.isEmpty()) {
             uris = null;
+            parameters.put("uris", uris);
+        } else {
+            parameters.put("uris", String.join(",", uris));
         }
-        parameters.put("uris", uris);
         parameters.put("page", page);
         parameters.put("size", size);
 

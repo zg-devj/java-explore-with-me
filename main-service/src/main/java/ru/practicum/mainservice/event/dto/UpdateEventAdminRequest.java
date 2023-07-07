@@ -1,10 +1,8 @@
 package ru.practicum.mainservice.event.dto;
 
 import ru.practicum.mainservice.event.EventStateAction;
-import ru.practicum.mainservice.location.dto.Location;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 
 /**
  * Данные для изменения информации о событии.
@@ -13,16 +11,14 @@ import javax.validation.constraints.Min;
  */
 public class UpdateEventAdminRequest {
     // Новая аннотация
-    @Min(20)
-    @Max(2000)
+    @Size(min = 20, max = 2000)
     private String annotation;
 
     // Новая категория
     private Long category;
 
     // Новое описание
-    @Min(20)
-    @Max(7000)
+    @Size(min = 20, max = 7000)
     private String description;
 
     // Новые дата и время на которые намечено событие.
@@ -46,7 +42,6 @@ public class UpdateEventAdminRequest {
     private EventStateAction stateAction;
 
     // Новый заголовок
-    @Min(3)
-    @Max(120)
+    @Size(min = 3, max = 120)
     private String title;
 }

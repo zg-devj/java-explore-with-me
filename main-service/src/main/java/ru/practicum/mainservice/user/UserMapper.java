@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import ru.practicum.mainservice.user.dto.NewUserRequest;
 import ru.practicum.mainservice.user.dto.UserDto;
+import ru.practicum.mainservice.user.dto.UserShortDto;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,6 +22,13 @@ public class UserMapper {
         return UserDto.builder()
                 .id(user.getId())
                 .email(user.getEmail())
+                .name(user.getName())
+                .build();
+    }
+
+    public static UserShortDto userToUserShortDto(User user) {
+        return UserShortDto.builder()
+                .id(user.getId())
                 .name(user.getName())
                 .build();
     }

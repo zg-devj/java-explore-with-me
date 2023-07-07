@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.Size;
+
 /**
  * Категория
  */
@@ -15,5 +17,6 @@ public class CategoryDto {
     private Long id;
 
     //Название категории
+    @Size(min = 1, max = 50)
     private String name;
 }

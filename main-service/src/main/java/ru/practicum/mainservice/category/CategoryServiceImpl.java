@@ -18,12 +18,12 @@ import static ru.practicum.mainservice.utils.Utils.getPageRequest;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public CategoryDto findCategoryById(long categoryId) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new NotFoundException(String.format("Category with id=%d not found.", categoryId)));
@@ -31,6 +31,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<CategoryDto> findAllCategories(int from, int size) {
         PageRequest pageRequest = getPageRequest(from, size);
         return CategoryMapper.categoryToCategoryDto(categoryRepository.findAll(pageRequest).toList());
@@ -41,7 +42,7 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDto createCategory(NewCategoryDto newCategoryDto) {
         Category newCategory = CategoryMapper.newCategoryDtoToCategory(newCategoryDto);
         try {
-            Category saved = categoryRepository.save(newCategory);
+            Category saved = categoryRepository.saveAndFlush(newCategory);
             return CategoryMapper.categoryToCategoryDto(saved);
         } catch (DataIntegrityViolationException e) {
             throw new ConflictException("The integrity constraint has been violated.", e.getMessage());
@@ -64,14 +65,12 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    @Transactional
     public void deleteCategory(long categoryId) {
         try {
             categoryRepository.deleteById(categoryId);
         } catch (EmptyResultDataAccessException e) {
             throw new NotFoundException(String.format("Category with id=%d not found.", categoryId));
         } catch (DataIntegrityViolationException e) {
-            // TODO: 05.07.2023 CHECK проверить при категории с событиями
             throw new ConflictException("The category is not empty.",
                     "The conditions are not met for the requested operation.");
         }

@@ -34,18 +34,18 @@ public class StatsServiceImpl implements StatsService {
         if (unique) {
             if (uris == null || uris.isEmpty()) {
                 return statsMapper.viewStatsToViewStatsDto(statsRepository
-                        .findResUniqueIP(start, end, pageRequest).getContent());
+                        .findResUniqueIP(start, end, pageRequest));
             } else {
-                return statsMapper.viewStatsToViewStatsDto(statsRepository
-                        .findResUniqueIPInUri(start, end, uris, pageRequest).getContent());
+                return statsMapper.viewStatsToViewStatsDto(statsRepository.
+                        findResUniqueIPInUri(start, end, uris, pageRequest));
             }
         } else {
             if (uris == null || uris.isEmpty()) {
-                return statsMapper.viewStatsToViewStatsDto(statsRepository
-                        .findRes(start, end, pageRequest).getContent());
+                return statsMapper.viewStatsToViewStatsDto(statsRepository.
+                        findRes(start, end, pageRequest));
             } else {
-                return statsMapper.viewStatsToViewStatsDto(statsRepository
-                        .findResInUri(start, end, uris, pageRequest).getContent());
+                return statsMapper.viewStatsToViewStatsDto(statsRepository.
+                        findResInUri(start, end, uris, pageRequest));
             }
         }
 

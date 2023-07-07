@@ -1,56 +1,56 @@
 package ru.practicum.mainservice.event.dto;
 
-import ru.practicum.mainservice.location.dto.Location;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
+import java.time.LocalDateTime;
 
 /**
  * Новое событие
  */
+@Data
 public class NewEventDto {
 
     // Краткое описание события
-    @NotEmpty
-    @Min(20)
-    @Max(2000)
+    @NotBlank
+    @Size(min = 20, max = 2000)
     private String annotation;
 
     // id категории к которой относится событие
     @NotNull
+    @Positive
     private Long category;
 
     // Полное описание события
-    @NotNull
-    @Min(20)
-    @Max(7000)
+    @NotBlank
+    @Size(min = 20, max = 7000)
     private String description;
 
     // Дата и время на которые намечено событие. Дата и время указываются в формате "yyyy-MM-dd HH:mm:ss"
-    @NotEmpty
-    private String eventDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime eventDate;
 
     // Широта и долгота места проведения события
     @NotNull
     private Location location;
 
     // Нужно ли оплачивать участие в событии, default = false
-    private boolean paid;
+    private Boolean paid;
 
     // Ограничение на количество участников. Значение 0 - означает отсутствие ограничения
-    // default false
+    @PositiveOrZero
     private Integer participantLimit;
 
     // Нужна ли пре-модерация заявок на участие. Если true, то все заявки будут ожидать
     // подтверждения инициатором события. Если false - то будут подтверждаться автоматически
     // default true
-    private boolean requestModeration;
+    private Boolean requestModeration;
 
-    @NotEmpty
-    @Min(3)
-    @Max(120)
     // Заголовок события
+    @NotBlank
+    @Size(min = 3, max = 120)
     private String title;
 }

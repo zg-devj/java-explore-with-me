@@ -35,7 +35,7 @@ public class AdminCategoryController {
     @PatchMapping("/{catId}")
     public CategoryDto adminUpdateCategory(
             @PathVariable long catId,
-            @RequestBody CategoryDto categoryDto
+            @RequestBody @Valid CategoryDto categoryDto
     ) {
         log.info("PATCH /admin/categories/{} - Changing the category.", catId);
         return categoryService.updateCategory(catId, categoryDto);

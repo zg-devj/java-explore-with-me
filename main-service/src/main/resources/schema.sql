@@ -1,8 +1,8 @@
 -- для тестирования
 -- drop table if exists compilation_event;
 -- drop table if exists compilations;
--- drop table if exists requests;
--- drop table if exists events;
+drop table if exists requests;
+drop table if exists events;
 drop table if exists categories;
 drop table if exists users;
 -- drop table if exists locations;
@@ -13,8 +13,7 @@ drop table if exists users;
 --     id  bigint generated always as identity,
 --     lat real not null,
 --     lon real not null,
---     constraint pk_locations primary key (id),
---     constraint uq_locations_lat_lon unique (lat, lon)
+--     constraint pk_locations primary key (id)
 -- );
 
 -- пользователи
@@ -36,40 +35,40 @@ create table if not exists categories
     constraint uq_categories_name unique (name)
 );
 
--- -- события
--- create table if not exists events
--- (
---     id                 bigint generated always as identity,
---     title              varchar(120)                not null,
---     user_id            bigint                      not null,
---     category_id        bigint                      not null,
---     location_id        bigint                      not null,
---     annotation         varchar(2000)               not null,
---     description        varchar(7000)               not null,
---     created_on         timestamp without time zone          default now(),
---     event_date         timestamp without time zone not null,
---     published_on       timestamp without time zone          default null,
---     paid               boolean                     not null default false,
---     participant_limit  int                         not null default 0,
---     request_moderation boolean                     not null default true,
---     state              varchar(9)                  not null default 'PENDING',
---     constraint pk_events primary key (id),
---     constraint fk_events_users foreign key (user_id) references users (id),
---     constraint fk_events_categories foreign key (category_id) references categories (id),
---     constraint fk_events_locations foreign key (location_id) references locations (id)
--- );
---
--- create table if not exists requests
--- (
---     id           bigint generated always as identity,
---     created      timestamp without time zone default now(),
---     event_id     bigint     not null,
---     requester_id bigint     not null,
---     status       varchar(9) not null         default 'PENDING',
---     constraint pk_requests primary key (id),
---     constraint fk_requests_events foreign key (event_id) references events (id),
---     constraint fk_requests_users foreign key (requester_id) references users (id)
--- );
+-- события
+create table if not exists events
+(
+    id                 bigint generated always as identity,
+    title              varchar(120)                not null,
+    user_id            bigint                      not null,
+    category_id        bigint                      not null,
+    location_lat       real                        not null,
+    location_lon       real                        not null,
+    annotation         varchar(2000)               not null,
+    description        varchar(7000)               not null,
+    created_on         timestamp without time zone not null default now(),
+    event_date         timestamp without time zone,
+    published_on       timestamp without time zone          default null,
+    paid               boolean                     not null default false,
+    participant_limit  int                         not null default 0,
+    request_moderation boolean                     not null default true,
+    state              varchar(9)                  not null default 'PENDING',
+    constraint pk_events primary key (id),
+    constraint fk_events_users foreign key (user_id) references users (id),
+    constraint fk_events_categories foreign key (category_id) references categories (id) on delete restrict
+);
+
+create table if not exists requests
+(
+    id           bigint generated always as identity,
+    created      timestamp without time zone not null default now(),
+    event_id     bigint                      not null,
+    requester_id bigint                      not null,
+    status       varchar(9)                  not null default 'PENDING',
+    constraint pk_requests primary key (id),
+    constraint fk_requests_events foreign key (event_id) references events (id),
+    constraint fk_requests_users foreign key (requester_id) references users (id)
+);
 --
 -- create table if not exists compilations
 -- (

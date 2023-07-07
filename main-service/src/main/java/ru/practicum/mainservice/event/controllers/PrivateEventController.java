@@ -1,8 +1,10 @@
 package ru.practicum.mainservice.event.controllers;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.mainservice.event.EventService;
 import ru.practicum.mainservice.event.dto.EventFullDto;
 import ru.practicum.mainservice.event.dto.EventShortDto;
 import ru.practicum.mainservice.event.dto.NewEventDto;
@@ -11,6 +13,7 @@ import ru.practicum.mainservice.request.dto.EventRequestStatusUpdateRequest;
 import ru.practicum.mainservice.request.dto.EventRequestStatusUpdateResult;
 import ru.practicum.mainservice.request.dto.ParticipationRequestDto;
 
+import javax.validation.Valid;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
@@ -19,8 +22,11 @@ import java.util.List;
  */
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/users")
 public class PrivateEventController {
+
+    private final EventService eventService;
 
     // Получение событий, добавленных текущим пользователем
     @GetMapping("/{userId}/events")
@@ -29,19 +35,19 @@ public class PrivateEventController {
             @RequestParam(required = false, defaultValue = "0") @PositiveOrZero int from,
             @RequestParam(required = false, defaultValue = "10") @PositiveOrZero int size
     ) {
-        log.info("GET /users/{}/events - Получение событий, добавленных текущим пользователем.", userId);
-        return null;
+        log.info("GET /users/{}/events - Getting events added by the current user.", userId);
+        return eventService.initiatorGetEvents(userId, from, size);
     }
 
     // Добавление нового события
     @PostMapping("/{userId}/events")
     @ResponseStatus(HttpStatus.CREATED)
-    public EventShortDto initiatorAddEvent(
+    public EventFullDto initiatorAddEvent(
             @PathVariable long userId,
-            @RequestBody NewEventDto newEventDto
+            @RequestBody @Valid NewEventDto newEventDto
     ) {
-        log.info("POST /users/{}/events - Добавление нового события.", userId);
-        return null;
+        log.info("POST /users/{}/events - Adding a new event.", userId);
+        return eventService.initiatorAddEvent(userId, newEventDto);
     }
 
     // Получение полной информации о событии добавленном текущим пользователем
@@ -51,9 +57,9 @@ public class PrivateEventController {
             @PathVariable long eventId
     ) {
         log.info("GET /users/{}/events/{} - " +
-                        "Получение полной информации о событии добавленном текущим пользователем.",
+                        "Getting full information about the event added by the current user.",
                 userId, eventId);
-        return null;
+        return eventService.initiatorGetEvent(userId, eventId);
     }
 
     // Изменение события добавленного текущим пользователем
@@ -63,9 +69,9 @@ public class PrivateEventController {
             @PathVariable long eventId,
             @RequestBody UpdateEventUserRequest updateEventUserRequest
     ) {
-        log.info("PATCH /users/{}/events/{} - Изменение события добавленного текущим пользователем.",
+        log.info("PATCH /users/{}/events/{} - Changing an event added by the current user.",
                 userId, eventId);
-        return null;
+        return eventService.initiatorUpdateEvent(userId, eventId, updateEventUserRequest);
     }
 
     // Получение информации о запросах на участие в событии текущего пользователя
@@ -75,7 +81,7 @@ public class PrivateEventController {
             @PathVariable long eventId
     ) {
         log.info("GET /users/{}/events/{}/requests - " +
-                        "Получение информации о запросах на участие в событии текущего пользователя.",
+                        "Getting information about requests to participate in the event of the current user.",
                 userId, eventId);
         return null;
     }
@@ -89,8 +95,8 @@ public class PrivateEventController {
             @RequestBody EventRequestStatusUpdateRequest updateRequest
     ) {
         log.info("PATCH /users/{}/events/{}/requests - " +
-                        "Изменение статуса (подтверждена, отменена) заявок на участие " +
-                        "в событии текущего пользователя.", userId, eventId);
+                "Changing the status (confirmed, canceled) of applications " +
+                "for participation in the event of the current user.", userId, eventId);
         return null;
     }
 }

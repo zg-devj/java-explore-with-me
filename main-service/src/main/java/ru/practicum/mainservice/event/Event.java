@@ -1,18 +1,13 @@
 package ru.practicum.mainservice.event;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import ru.practicum.mainservice.category.Category;
-import ru.practicum.mainservice.compilation.Compilation;
-import ru.practicum.mainservice.location.LocationEntity;
 import ru.practicum.mainservice.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Set;
 
+@Builder
 @Setter
 @Getter
 @AllArgsConstructor
@@ -34,33 +29,41 @@ public class Event {
     private String description;
 
     // Дата и время создания события (в формате "yyyy-MM-dd HH:mm:ss")
+    @Column(name = "created_on")
     private LocalDateTime createdOn;
 
     // Дата и время на которые намечено событие. Дата и время указываются в формате "yyyy-MM-dd HH:mm:ss"
+    @Column(name = "event_date")
     private LocalDateTime eventDate;
 
     // Дата и время публикации события (в формате "yyyy-MM-dd HH:mm:ss")
+    @Column(name = "published_on")
     private LocalDateTime publishedOn;
 
     // Нужно ли оплачивать участие в событии
-    private Boolean paid = false;
+    private Boolean paid;
 
     // Ограничение на количество участников. Значение 0 - означает отсутствие ограничения
-    private Integer participantLimit = 0;
+    @Column(name = "participant_limit")
+    private Integer participantLimit;
 
     // Нужна ли пре-модерация заявок на участие.
-    // Если true, то все заявки будут ожидать подтверждения инициатором события.
+    // Если true (default), то все заявки будут ожидать подтверждения инициатором события.
     // Если false - то будут подтверждаться автоматически.
-    private Boolean requestModeration = true;
+    @Column(name = "request_moderation")
+    private Boolean requestModeration;
 
     // Список состояний жизненного цикла события
     @Enumerated(EnumType.STRING)
     private EventState state;
 
-    // место проведения события
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "location_id", nullable = false)
-    private LocationEntity location;
+    // место проведения события широта
+    @Column(name = "location_lat")
+    private Double lat;
+
+    // место проведения события долгота
+    @Column(name = "location_lon")
+    private Double lon;
 
     // категория
     @ManyToOne(fetch = FetchType.LAZY)
@@ -72,6 +75,6 @@ public class Event {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToMany(mappedBy = "events")
-    private Set<Compilation> compilations;
+//    @ManyToMany(mappedBy = "events")
+//    private Set<Compilation> compilations;
 }
