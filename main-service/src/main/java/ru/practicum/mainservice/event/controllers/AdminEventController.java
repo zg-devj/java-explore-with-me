@@ -14,8 +14,9 @@ import javax.validation.constraints.PositiveOrZero;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
+
+import static ru.practicum.mainservice.utils.Util.DATE_TIME_FORMATTER;
 
 /**
  * API для работы с событиями
@@ -25,8 +26,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/admin/events")
 public class AdminEventController {
-
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private final EventService eventService;
 

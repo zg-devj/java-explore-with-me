@@ -14,7 +14,7 @@ import ru.practicum.mainservice.user.dto.UserDto;
 
 import java.util.List;
 
-import static ru.practicum.mainservice.utils.Utils.getPageRequest;
+import static ru.practicum.mainservice.utils.Util.getPageRequest;
 
 @Service
 @Transactional(readOnly = true)

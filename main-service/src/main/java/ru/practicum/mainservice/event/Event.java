@@ -55,7 +55,7 @@ public class Event {
 
     // Количество одобренных заявок на участие в данном событии
     @Column(name = "confirmed_requests")
-    private Integer confirmedRequests;
+    private Long confirmedRequests;
 
     // Нужна ли пре-модерация заявок на участие.
     // Если true (default), то все заявки будут ожидать подтверждения инициатором события.
@@ -85,8 +85,8 @@ public class Event {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
-    private List<EventRequest> requests;
+//    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
+//    private List<EventRequest> requests;
 
 //    @ManyToMany(mappedBy = "events")
 //    private Set<Compilation> compilations;

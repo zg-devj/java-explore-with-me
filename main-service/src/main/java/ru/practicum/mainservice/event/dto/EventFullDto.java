@@ -33,7 +33,7 @@ public class EventFullDto {
     private CategoryDto category;
 
     // Количество одобренных заявок на участие в данном событии
-    private Integer confirmedRequests;
+    private Long confirmedRequests;
 
     // Дата и время создания события (в формате "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

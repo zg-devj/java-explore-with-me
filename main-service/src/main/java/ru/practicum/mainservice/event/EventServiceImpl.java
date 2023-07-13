@@ -3,12 +3,14 @@ package ru.practicum.mainservice.event;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.mainservice.category.Category;
 import ru.practicum.mainservice.category.CategoryRepository;
 import ru.practicum.mainservice.event.dto.*;
 import ru.practicum.mainservice.event.params.FindEventAdminParam;
+import ru.practicum.mainservice.event.params.FindEventPublicParam;
 import ru.practicum.mainservice.exceptions.BadRequestException;
 import ru.practicum.mainservice.exceptions.ConflictException;
 import ru.practicum.mainservice.exceptions.NotFoundException;
@@ -17,19 +19,19 @@ import ru.practicum.mainservice.request.EventRequestMapper;
 import ru.practicum.mainservice.request.EventRequestRepository;
 import ru.practicum.mainservice.request.RequestStatus;
 import ru.practicum.mainservice.request.dto.ParticipationRequestDto;
-import ru.practicum.mainservice.request.model.IConfirmedRequests;
 import ru.practicum.mainservice.services.StatsService;
 import ru.practicum.mainservice.user.User;
 import ru.practicum.mainservice.user.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static ru.practicum.mainservice.event.criteria.EventSpecs.*;
-import static ru.practicum.mainservice.utils.Utils.getPageRequest;
+import static ru.practicum.mainservice.utils.Util.getPageRequest;
 
 @Service
 @RequiredArgsConstructor
@@ -60,8 +62,6 @@ public class EventServiceImpl implements EventService {
                 .map(Event::getId)
                 .collect(Collectors.toList());
 
-        List<IConfirmedRequests> listRequests = requestRepository.findConfirmedRequestCounts(eventIds);
-
         LocalDateTime start = events.stream().min(Comparator.comparing(Event::getCreatedOn))
                 .get().getCreatedOn();
 
@@ -71,7 +71,7 @@ public class EventServiceImpl implements EventService {
 
         List<ViewStats> stats = statsService.getStatsSearchInterval(start, false, uris);
 
-        return EventMapper.eventToEventShortDto(events, initiator, stats, listRequests);
+        return EventMapper.eventToEventShortDto(events, initiator, stats);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class EventServiceImpl implements EventService {
 
         try {
             Event createdEvent = eventRepository.save(newEvent);
-            return EventMapper.eventToEventFullDto(createdEvent, initiator, 0, 0);
+            return EventMapper.eventToEventFullDto(createdEvent, initiator, 0);
         } catch (DataIntegrityViolationException e) {
             throw new ConflictException("The integrity constraint has been violated.", e.getMessage());
         }
@@ -212,9 +212,7 @@ public class EventServiceImpl implements EventService {
             // получаем заявки
             List<EventRequest> allById = requestRepository.findAllById(updateRequest.getRequestIds());
 
-            IConfirmedRequests confirmedRequests = requestRepository
-                    .findConfirmedRequestCount(eventId);
-            long confirmedCount = confirmedRequests == null ? 0 : confirmedRequests.getConfirmedCount();
+            long confirmedCount = event.getConfirmedRequests();
 
             // превышен лимит
             if (event.getParticipantLimit() <= confirmedCount) {
@@ -229,7 +227,8 @@ public class EventServiceImpl implements EventService {
                     if (event.getParticipantLimit() > confirmedCount) {
                         // изменяем статус на CONFIRMED
                         eventRequest.setStatus(RequestStatus.CONFIRMED);
-                        confirmedCount++;
+                        ++confirmedCount;
+                        event.setConfirmedRequests(confirmedCount);
                     } else {
                         isMoreLimit = true;
                         // лимит превышен, изменяем на CANCELLED
@@ -243,6 +242,7 @@ public class EventServiceImpl implements EventService {
             }
 
             // изменяем заявки
+            eventRepository.save(event);
             requestRepository.saveAll(allById);
 
             if (isMoreLimit) {
@@ -260,7 +260,7 @@ public class EventServiceImpl implements EventService {
                 if (eventRequest.getStatus() == RequestStatus.PENDING &&
                         eventRequest.getEvent().getId() == eventId) {
                     // если статус PENDING
-                    eventRequest.setStatus(RequestStatus.CANCELED);
+                    eventRequest.setStatus(RequestStatus.REJECTED);
                 } else {
                     // если нет
                     throw new ConflictException("The status can be changed only for applications " +
@@ -281,7 +281,7 @@ public class EventServiceImpl implements EventService {
                         .collect(Collectors.toList()));
         List<ParticipationRequestDto> rejected = EventRequestMapper.eventRequestToParticipationRequestDto(
                 resultRequests.stream()
-                        .filter(f -> f.getStatus() == RequestStatus.CANCELED)
+                        .filter(f -> f.getStatus() == RequestStatus.REJECTED)
                         .collect(Collectors.toList()));
         updateResult.setConfirmedRequests(confirmed);
         updateResult.setRejectedRequests(rejected);
@@ -298,9 +298,9 @@ public class EventServiceImpl implements EventService {
 
         List<Event> events = eventRepository.findAll
                 (isUsersIn(param.getUsers())
-                        .and(isCategoriesIn(param.getCategories()))
-                        .and(isStatesIn(param.getStates())),
-                pageRequest).getContent();
+                                .and(isCategoriesIn(param.getCategories()))
+                                .and(isStatesIn(param.getStates())),
+                        pageRequest).getContent();
 
         // если список пуст
         if (events.isEmpty()) {
@@ -310,8 +310,6 @@ public class EventServiceImpl implements EventService {
         List<Long> eventIds = events.stream()
                 .map(Event::getId)
                 .collect(Collectors.toList());
-
-        List<IConfirmedRequests> listRequests = requestRepository.findConfirmedRequestCounts(eventIds);
 
         LocalDateTime start = param.getRangeStart() != null ?
                 param.getRangeStart() : events.stream()
@@ -329,7 +327,7 @@ public class EventServiceImpl implements EventService {
         List<ViewStats> stats = statsService.getStatsSearch(start, end, false, uris);
 
         // возвращаем результат
-        return EventMapper.eventToEventFullDto(events, stats, listRequests);
+        return EventMapper.eventToEventFullDto(events, stats);
     }
 
     @Override
@@ -420,9 +418,55 @@ public class EventServiceImpl implements EventService {
         }
     }
 
+    // public
+
     @Override
-    public List<EventShortDto> publicFindEvents() {
-        return null;
+    public List<EventShortDto> publicFindEvents(FindEventPublicParam param) {
+
+        Sort sort = Sort.by(Sort.Direction.DESC, "eventDate");
+        if (param.getSort() == EventSort.VIEWS) {
+            sort = Sort.by("views").descending();
+        }
+
+        PageRequest pageRequest = getPageRequest(param.getFrom(), param.getSize(), sort);
+
+        List<Event> events = eventRepository.findAll(
+                isTextAnnotation(param.getText()).or(isTextDescription(param.getText()))
+                        .and(isCategoriesIn(param.getCategories()))
+                        .and(isPaid(param.getPaid()))
+                        .and(isAvailable(param.isOnlyAvailable())),
+                pageRequest).getContent();
+
+        // если список пуст
+        if (events.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        List<Long> eventIds = events.stream()
+                .map(Event::getId)
+                .collect(Collectors.toList());
+
+        LocalDateTime start = param.getRangeStart() != null ?
+                param.getRangeStart() : events.stream()
+                .min(Comparator.comparing(Event::getCreatedOn))
+                .get().getCreatedOn();
+
+        // TODO: 12.07.2023 check date
+        LocalDateTime end = param.getRangeEnd() != null ?
+                param.getRangeEnd() : LocalDateTime.now();
+
+        List<String> uris = eventIds.stream()
+                .map(x -> "/events/" + x)
+                .collect(Collectors.toList());
+
+        List<ViewStats> stats = statsService.getStatsSearch(start, end, false, uris);
+
+        List<EventShortDto> list = EventMapper.eventToEventShortDto(events, stats);
+
+        if (param.getSort() == EventSort.VIEWS) {
+            Collections.sort(list, Comparator.comparing(EventShortDto::getViews));
+        }
+        return list;
     }
 
     @Override
@@ -439,12 +483,6 @@ public class EventServiceImpl implements EventService {
     }
 
     private EventFullDto getEventFullDto(Event event, User initiator, boolean unique) {
-        IConfirmedRequests confirmedRequest = requestRepository.findConfirmedRequestCount(event.getId());
-
-        int confirmedCount = 0;
-        if (confirmedRequest != null) {
-            confirmedCount = confirmedRequest.getConfirmedCount();
-        }
 
         LocalDateTime start = event.getCreatedOn();
         List<String> uris = List.of("/events/" + event.getId());
@@ -455,7 +493,7 @@ public class EventServiceImpl implements EventService {
             views = stats.get(0).getHits();
         }
 
-        return EventMapper.eventToEventFullDto(event, initiator, confirmedCount, views);
+        return EventMapper.eventToEventFullDto(event, initiator, views);
     }
 
     // получение инициатора по id

@@ -36,22 +36,19 @@ public class EventRequestServiceImpl implements EventRequestService {
     }
 
     @Override
-    @Transactional
+//    @Transactional
     public ParticipationRequestDto participantAddRequest(long userId, long eventId) {
         User requestor = getUserCheck(userId);
         Event event = getEventCheck(eventId);
 
-        IConfirmedRequests confirmedRequests = requestRepository
-                .findConfirmedRequestCount(eventId);
-
-        long confirmedCount = confirmedRequests == null ? 0 : confirmedRequests.getConfirmedCount();
+        long confirmedCount = event.getConfirmedRequests();
 
 
         // если у события достигнут лимит запросов на участие
         if (event.getParticipantLimit() != 0 &&
                 event.getParticipantLimit() <= confirmedCount) {
-            throw new ConflictException("The limit of participation requests has been reached.",
-                    "Integrity constraint has been violated.");
+            throw new ConflictException("The participant limit has been reachedThe participant limit has been reached",
+                    "For the requested operation the conditions are not met.");
         }
 
         // нельзя участвовать в неопубликованном событии
@@ -69,8 +66,9 @@ public class EventRequestServiceImpl implements EventRequestService {
         // если для события отключена пре-модерация запросов на участие,
         // то запрос должен автоматически перейти в состояние подтвержденного
         RequestStatus requestStatus = RequestStatus.PENDING;
-        if (!event.getRequestModeration() || event.getParticipantLimit()==0) {
+        if (!event.getRequestModeration() || event.getParticipantLimit() == 0) {
             requestStatus = RequestStatus.CONFIRMED;
+            event.setConfirmedRequests(++confirmedCount);
         }
 
         EventRequest eventRequest = EventRequest.builder()
@@ -79,9 +77,12 @@ public class EventRequestServiceImpl implements EventRequestService {
                 .requester(requestor)
                 .status(requestStatus)
                 .build();
+
         try {
+
             EventRequest saved = requestRepository.save(eventRequest);
-            return EventRequestMapper.eventRequestToParticipationRequestDto(saved);
+            ParticipationRequestDto requestDto = EventRequestMapper.eventRequestToParticipationRequestDto(saved);
+            return requestDto;
         } catch (DataIntegrityViolationException e) {
             throw new ConflictException("The integrity constraint has been violated.", e.getMessage());
         }

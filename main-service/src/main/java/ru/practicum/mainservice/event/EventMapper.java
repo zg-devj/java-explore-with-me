@@ -36,12 +36,13 @@ public class EventMapper {
                 .participantLimit(newEventDto.getParticipantLimit())
                 .requestModeration(newEventDto.getRequestModeration())
                 .title(newEventDto.getTitle())
+                .confirmedRequests(0L)
                 .state(EventState.PENDING)
                 .createdOn(LocalDateTime.now())
                 .build();
     }
 
-    public static EventFullDto eventToEventFullDto(Event event, User initiator, int confirmedRequest, long views) {
+    public static EventFullDto eventToEventFullDto(Event event, User initiator, long views) {
         Location location = Location.builder()
                 .lat(event.getLat())
                 .lon(event.getLon()).build();
@@ -49,7 +50,7 @@ public class EventMapper {
         EventFullDto eventFullDto = new EventFullDto();
         eventFullDto.setAnnotation(event.getAnnotation());
         eventFullDto.setCategory(CategoryMapper.categoryToCategoryDto(event.getCategory()));
-        eventFullDto.setConfirmedRequests(confirmedRequest);
+        eventFullDto.setConfirmedRequests(event.getConfirmedRequests());
         eventFullDto.setCreatedOn(event.getCreatedOn());
         eventFullDto.setDescription(event.getDescription());
         eventFullDto.setEventDate(event.getEventDate());
@@ -67,11 +68,11 @@ public class EventMapper {
         return eventFullDto;
     }
 
-    public static EventShortDto eventToEventShortDto(Event event, User initiator, Long views, Integer confirmedRequest) {
+    public static EventShortDto eventToEventShortDto(Event event, User initiator, Long views) {
         EventShortDto eventShortDto = new EventShortDto();
         eventShortDto.setAnnotation(event.getAnnotation());
         eventShortDto.setCategory(CategoryMapper.categoryToCategoryDto(event.getCategory()));
-        eventShortDto.setConfirmedRequests(confirmedRequest);
+        eventShortDto.setConfirmedRequests(event.getConfirmedRequests());
         eventShortDto.setEventDate(event.getEventDate());
         eventShortDto.setId(event.getId());
         eventShortDto.setInitiator(UserMapper.userToUserShortDto(initiator));
@@ -82,18 +83,26 @@ public class EventMapper {
         return eventShortDto;
     }
 
+    public static EventShortDto eventToEventShortDto(Event event, Long views) {
+        EventShortDto eventShortDto = new EventShortDto();
+        eventShortDto.setAnnotation(event.getAnnotation());
+        eventShortDto.setCategory(CategoryMapper.categoryToCategoryDto(event.getCategory()));
+        eventShortDto.setConfirmedRequests(event.getConfirmedRequests());
+        eventShortDto.setEventDate(event.getEventDate());
+        eventShortDto.setId(event.getId());
+        eventShortDto.setInitiator(UserMapper.userToUserShortDto(event.getUser()));
+        eventShortDto.setPaid(event.getPaid());
+        eventShortDto.setTitle(event.getTitle());
+        eventShortDto.setViews(views);
+
+        return eventShortDto;
+    }
+
     public static List<EventFullDto> eventToEventFullDto(List<Event> events,
-                                                         List<ViewStats> stats, List<IConfirmedRequests> requestsList) {
+                                                         List<ViewStats> stats) {
 
         List<EventFullDto> list = new ArrayList<>();
         for (Event event : events) {
-            int confirmedCount = 0;
-            if (requestsList != null && !requestsList.isEmpty()) {
-                confirmedCount = requestsList.stream()
-                        .filter(f -> Objects.equals(f.getEventId(), event.getId()))
-                        .findFirst()
-                        .map(IConfirmedRequests::getConfirmedCount).orElse(0);
-            }
             Long views = 0L;
             if (stats != null && !stats.isEmpty()) {
                 views = stats.stream()
@@ -101,22 +110,15 @@ public class EventMapper {
                         .findFirst()
                         .map(ViewStats::getHits).orElse(0L);
             }
-            list.add(EventMapper.eventToEventFullDto(event,event.getUser(),confirmedCount,views));
+            list.add(EventMapper.eventToEventFullDto(event, event.getUser(), views));
         }
         return list;
     }
 
     public static List<EventShortDto> eventToEventShortDto(List<Event> events, User initiator,
-                                                           List<ViewStats> stats, List<IConfirmedRequests> requestsList) {
+                                                           List<ViewStats> stats) {
         List<EventShortDto> list = new ArrayList<>();
         for (Event event : events) {
-            int confirmedCount = 0;
-            if (requestsList != null && !requestsList.isEmpty()) {
-                confirmedCount = requestsList.stream()
-                        .filter(f -> Objects.equals(f.getEventId(), event.getId()))
-                        .findFirst()
-                        .map(IConfirmedRequests::getConfirmedCount).orElse(0);
-            }
             Long views = 0L;
             if (stats != null && !stats.isEmpty()) {
                 views = stats.stream()
@@ -124,7 +126,22 @@ public class EventMapper {
                         .findFirst()
                         .map(ViewStats::getHits).orElse(0L);
             }
-            list.add(EventMapper.eventToEventShortDto(event, initiator, views, confirmedCount));
+            list.add(EventMapper.eventToEventShortDto(event, initiator, views));
+        }
+        return list;
+    }
+
+    public static List<EventShortDto> eventToEventShortDto(List<Event> events, List<ViewStats> stats) {
+        List<EventShortDto> list = new ArrayList<>();
+        for (Event event : events) {
+            Long views = 0L;
+            if (stats != null && !stats.isEmpty()) {
+                views = stats.stream()
+                        .filter(f -> Objects.equals(f.getUri(), "/events/" + event.getId()))
+                        .findFirst()
+                        .map(ViewStats::getHits).orElse(0L);
+            }
+            list.add(EventMapper.eventToEventShortDto(event, views));
         }
         return list;
     }

@@ -2,6 +2,7 @@ package ru.practicum.mainservice.event;
 
 import ru.practicum.mainservice.event.dto.*;
 import ru.practicum.mainservice.event.params.FindEventAdminParam;
+import ru.practicum.mainservice.event.params.FindEventPublicParam;
 import ru.practicum.mainservice.request.dto.ParticipationRequestDto;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public interface EventService {
     EventFullDto adminUpdateEvent(long eventId, UpdateEventAdminRequest updateEvent);
 
     // public
-    List<EventShortDto> publicFindEvents();
+    List<EventShortDto> publicFindEvents(FindEventPublicParam param);
 
     EventFullDto publicGetEvent(long eventId);
 }

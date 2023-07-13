@@ -42,4 +42,44 @@ public class EventSpecs {
             }
         };
     }
+
+    public static Specification<Event> isPaid(Boolean paid) {
+        return (root, query, criteriaBuilder) -> {
+            if (paid != null) {
+                return criteriaBuilder.equal(root.get(Event_.PAID), paid);
+            } else {
+                return criteriaBuilder.and();
+            }
+        };
+    }
+
+    public static Specification<Event> isTextAnnotation(String text) {
+        return (root, query, criteriaBuilder) -> {
+            if (text != null) {
+                return criteriaBuilder.like(root.get(Event_.ANNOTATION), text);
+            } else {
+                return criteriaBuilder.and();
+            }
+        };
+    }
+
+    public static Specification<Event> isTextDescription(String text) {
+        return (root, query, criteriaBuilder) -> {
+            if (text != null) {
+                return criteriaBuilder.like(root.get(Event_.DESCRIPTION), text);
+            } else {
+                return criteriaBuilder.and();
+            }
+        };
+    }
+
+    public static Specification<Event> isAvailable(boolean onlyAvailable) {
+        return (root, query, criteriaBuilder) -> {
+            if (onlyAvailable) {
+                return criteriaBuilder.lessThan(root.get(Event_.PARTICIPANT_LIMIT), root.get(Event_.CONFIRMED_REQUESTS));
+            } else {
+                return criteriaBuilder.and();
+            }
+        };
+    }
 }
