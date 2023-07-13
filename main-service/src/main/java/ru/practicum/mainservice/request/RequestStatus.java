@@ -7,5 +7,5 @@ package ru.practicum.mainservice.request;
  * REJECTED - отклоненный
  */
 public enum RequestStatus {
-    PENDING, CONFIRMED, REJECTED
+    PENDING, CONFIRMED, CANCELED, REJECTED
 }

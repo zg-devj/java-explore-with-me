@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
 public class UpdateEventUserRequest {
     // Новая аннотация
     @Size(min = 20, max = 2000)
-    @Null
     private String annotation;
 
     // Новая категория
@@ -25,7 +24,6 @@ public class UpdateEventUserRequest {
 
     // Новое описание
     @Size(min = 20, max = 7000)
-    @Null
     private String description;
 
     // Новые дата и время на которые намечено событие.

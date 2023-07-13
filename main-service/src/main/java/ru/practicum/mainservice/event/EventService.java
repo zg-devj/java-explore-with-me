@@ -1,9 +1,8 @@
 package ru.practicum.mainservice.event;
 
-import ru.practicum.mainservice.event.dto.EventFullDto;
-import ru.practicum.mainservice.event.dto.EventShortDto;
-import ru.practicum.mainservice.event.dto.NewEventDto;
-import ru.practicum.mainservice.event.dto.UpdateEventUserRequest;
+import ru.practicum.mainservice.event.dto.*;
+import ru.practicum.mainservice.event.params.FindEventAdminParam;
+import ru.practicum.mainservice.request.dto.ParticipationRequestDto;
 
 import java.util.List;
 
@@ -17,4 +16,19 @@ public interface EventService {
 
     EventFullDto initiatorUpdateEvent(long userId, long eventId,
                                       UpdateEventUserRequest updateEventUserRequest);
+
+    List<ParticipationRequestDto> initiatorGetEventRequests(long userId, long eventId);
+
+    EventRequestStatusUpdateResult initiatorChangeRequestStatus(long userId, long eventId,
+                                                                EventRequestStatusUpdateRequest updateRequest);
+
+    // admin
+    List<EventFullDto> adminFindEvents(FindEventAdminParam param);
+
+    EventFullDto adminUpdateEvent(long eventId, UpdateEventAdminRequest updateEvent);
+
+    // public
+    List<EventShortDto> publicFindEvents();
+
+    EventFullDto publicGetEvent(long eventId);
 }

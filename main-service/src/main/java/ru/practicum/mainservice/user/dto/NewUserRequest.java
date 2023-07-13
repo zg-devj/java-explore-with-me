@@ -16,7 +16,8 @@ import javax.validation.constraints.Size;
 @Setter
 public class NewUserRequest {
     // Почтовый адрес (unique)
-    @Size(min = 6, max = 256)
+    @NotBlank
+    @Size(min = 6, max = 254)
     @Email
     private String email;
 

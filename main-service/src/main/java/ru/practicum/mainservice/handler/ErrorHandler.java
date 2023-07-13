@@ -3,6 +3,7 @@ package ru.practicum.mainservice.handler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -26,10 +27,19 @@ public class ErrorHandler {
                 e.getMessage(), Collections.emptyList());
     }
 
+    // 400 MissingServletRequestParameterException
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError handlerMissingServletRequestParameterException(final MissingServletRequestParameterException e) {
+        log.warn(e.getMessage());
+        return new ApiError(HttpStatus.BAD_REQUEST.name(), "An incorrectly made request.",
+                e.getMessage(), Collections.emptyList());
+    }
+
     // 400 MethodArgumentTypeMismatch
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError handlerBadRequestException(final MethodArgumentTypeMismatchException e) {
+    public ApiError handlerMethodArgumentTypeMismatch(final MethodArgumentTypeMismatchException e) {
         log.warn(e.getMessage());
         return new ApiError(HttpStatus.BAD_REQUEST.name(), "An incorrectly made request.",
                 e.getMessage(), Collections.emptyList());
@@ -38,7 +48,7 @@ public class ErrorHandler {
     // 400
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError handlerValidateException(final MethodArgumentNotValidException e) {
+    public ApiError handlerMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
         log.warn(e.getMessage());
         StringBuilder errors = new StringBuilder();
         e.getBindingResult().getFieldErrors().forEach(

@@ -1,11 +1,17 @@
 package ru.practicum.mainservice.event;
 
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
 import ru.practicum.mainservice.category.Category;
+import ru.practicum.mainservice.request.EventRequest;
 import ru.practicum.mainservice.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Builder
 @Setter
@@ -47,6 +53,10 @@ public class Event {
     @Column(name = "participant_limit")
     private Integer participantLimit;
 
+    // Количество одобренных заявок на участие в данном событии
+    @Column(name = "confirmed_requests")
+    private Integer confirmedRequests;
+
     // Нужна ли пре-модерация заявок на участие.
     // Если true (default), то все заявки будут ожидать подтверждения инициатором события.
     // Если false - то будут подтверждаться автоматически.
@@ -74,6 +84,9 @@ public class Event {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
+    private List<EventRequest> requests;
 
 //    @ManyToMany(mappedBy = "events")
 //    private Set<Compilation> compilations;

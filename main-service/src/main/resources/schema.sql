@@ -50,6 +50,7 @@ create table if not exists events
     event_date         timestamp without time zone,
     published_on       timestamp without time zone          default null,
     paid               boolean                     not null default false,
+    confirmed_requests  int                         not null default 0,
     participant_limit  int                         not null default 0,
     request_moderation boolean                     not null default true,
     state              varchar(9)                  not null default 'PENDING',

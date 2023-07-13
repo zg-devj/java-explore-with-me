@@ -13,9 +13,8 @@ public class EventRequestMapper {
         ParticipationRequestDto dto = new ParticipationRequestDto();
         dto.setId(eventRequest.getId());
         dto.setCreated(eventRequest.getCreated());
-        ;
         dto.setEvent(eventRequest.getEvent().getId());
-        dto.setRequestor(eventRequest.getRequester().getId());
+        dto.setRequester(eventRequest.getRequester().getId());
         dto.setStatus(eventRequest.getStatus());
 
         return dto;

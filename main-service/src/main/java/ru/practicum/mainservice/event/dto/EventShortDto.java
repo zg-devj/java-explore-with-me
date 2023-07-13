@@ -29,7 +29,7 @@ public class EventShortDto {
     private String annotation;
 
     // Количество одобренных заявок на участие в данном событии
-    private Long confirmedRequests;
+    private Integer confirmedRequests;
 
     // Дата и время на которые намечено событие (в формате "yyyy-MM-dd HH:mm:ss")
     @NotEmpty

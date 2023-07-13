@@ -67,7 +67,7 @@ public class PrivateEventController {
     public EventFullDto initiatorUpdateEvent(
             @PathVariable long userId,
             @PathVariable long eventId,
-            @RequestBody UpdateEventUserRequest updateEventUserRequest
+            @RequestBody @Valid UpdateEventUserRequest updateEventUserRequest
     ) {
         log.info("PATCH /users/{}/events/{} - Changing an event added by the current user.",
                 userId, eventId);
@@ -83,7 +83,7 @@ public class PrivateEventController {
         log.info("GET /users/{}/events/{}/requests - " +
                         "Getting information about requests to participate in the event of the current user.",
                 userId, eventId);
-        return null;
+        return eventService.initiatorGetEventRequests(userId, eventId);
     }
 
     // Изменение статуса (подтверждена, отменена) заявок на участие
@@ -97,6 +97,6 @@ public class PrivateEventController {
         log.info("PATCH /users/{}/events/{}/requests - " +
                 "Changing the status (confirmed, canceled) of applications " +
                 "for participation in the event of the current user.", userId, eventId);
-        return null;
+        return eventService.initiatorChangeRequestStatus(userId, eventId, updateRequest);
     }
 }

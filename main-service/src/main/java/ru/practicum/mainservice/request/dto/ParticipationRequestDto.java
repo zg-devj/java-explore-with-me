@@ -23,7 +23,7 @@ public class ParticipationRequestDto {
     private Long id;
 
     // Идентификатор пользователя, отправившего заявку
-    private Long requestor;
+    private Long requester;
 
     // Статус заявки
     private RequestStatus status;

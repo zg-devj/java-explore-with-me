@@ -3,6 +3,7 @@ package ru.practicum.mainservice.request;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import ru.practicum.mainservice.event.Event;
 import ru.practicum.mainservice.request.dto.ParticipationRequestDto;
 import ru.practicum.mainservice.request.model.IConfirmedRequests;
 import ru.practicum.mainservice.user.User;
@@ -29,4 +30,15 @@ public interface EventRequestRepository extends JpaRepository<EventRequest, Long
 
     // получение заявки по id заявки и пользователю
     Optional<EventRequest> findFirstByIdAndRequesterId(long requestId, long requestorId);
+
+    // получение заявок по событию
+    List<EventRequest> findAllByEventId(long eventId);
+
+    // получение запросов по идентификаторам, и событию
+    List<EventRequest> findAllByIdInAndEvent(List<Long> ids, Event event);
+
+    List<EventRequest> findAllByEventIdAndStatusNot(long eventId, RequestStatus status);
+
+    @Query("update EventRequest as er set er.status=?2 where er.event.id=?1")
+    void updateAllByEventIdAndStatus(long eventId, RequestStatus status);
 }

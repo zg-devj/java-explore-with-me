@@ -29,25 +29,27 @@ public class EventRequestServiceImpl implements EventRequestService {
     @Override
     @Transactional(readOnly = true)
     public List<ParticipationRequestDto> participantGetRequests(long userId) {
-        User requestor = getUser(userId);
+        User requester = getUserCheck(userId);
 
-        List<EventRequest> requestList = requestRepository.findAllByRequester(requestor);
+        List<EventRequest> requestList = requestRepository.findAllByRequester(requester);
         return EventRequestMapper.eventRequestToParticipationRequestDto(requestList);
     }
 
     @Override
     @Transactional
     public ParticipationRequestDto participantAddRequest(long userId, long eventId) {
-        User requestor = getUser(userId);
-        Event event = getEvent(eventId);
+        User requestor = getUserCheck(userId);
+        Event event = getEventCheck(eventId);
 
         IConfirmedRequests confirmedRequests = requestRepository
                 .findConfirmedRequestCount(eventId);
 
         long confirmedCount = confirmedRequests == null ? 0 : confirmedRequests.getConfirmedCount();
 
+
         // если у события достигнут лимит запросов на участие
-        if (event.getParticipantLimit() <= confirmedCount) {
+        if (event.getParticipantLimit() != 0 &&
+                event.getParticipantLimit() <= confirmedCount) {
             throw new ConflictException("The limit of participation requests has been reached.",
                     "Integrity constraint has been violated.");
         }
@@ -67,7 +69,7 @@ public class EventRequestServiceImpl implements EventRequestService {
         // если для события отключена пре-модерация запросов на участие,
         // то запрос должен автоматически перейти в состояние подтвержденного
         RequestStatus requestStatus = RequestStatus.PENDING;
-        if (!event.getRequestModeration()) {
+        if (!event.getRequestModeration() || event.getParticipantLimit()==0) {
             requestStatus = RequestStatus.CONFIRMED;
         }
 
@@ -93,21 +95,21 @@ public class EventRequestServiceImpl implements EventRequestService {
                 .orElseThrow(() -> new NotFoundException(String.format("Request with id=%d not found.",
                         userId)));
 
-        eventRequest.setStatus(RequestStatus.REJECTED);
+        eventRequest.setStatus(RequestStatus.CANCELED);
 
         EventRequest updated = requestRepository.save(eventRequest);
         return EventRequestMapper.eventRequestToParticipationRequestDto(updated);
     }
 
     // получение инициатора по id
-    private User getUser(long userId) {
+    private User getUserCheck(long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(String.format("User with id=%d not found.",
                         userId)));
     }
 
     // получение события по id и инициатору
-    private Event getEvent(long eventId) {
+    private Event getEventCheck(long eventId) {
         return eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException(String.format("Event with id=%d not found.",
                         eventId)));

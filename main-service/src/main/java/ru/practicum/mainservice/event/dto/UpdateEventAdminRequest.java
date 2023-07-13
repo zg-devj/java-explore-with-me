@@ -1,14 +1,25 @@
 package ru.practicum.mainservice.event.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 import ru.practicum.mainservice.event.EventStateAction;
 
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 
 /**
  * Данные для изменения информации о событии.
  * Если поле в запросе не указано (равно null) - значит изменение
  * этих данных не требуется.
  */
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class UpdateEventAdminRequest {
     // Новая аннотация
     @Size(min = 20, max = 2000)
@@ -23,7 +34,9 @@ public class UpdateEventAdminRequest {
 
     // Новые дата и время на которые намечено событие.
     // Дата и время указываются в формате "yyyy-MM-dd HH:mm:ss"
-    private String eventDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime eventDate;
 
     // Широта и долгота места проведения события
     private Location location;
