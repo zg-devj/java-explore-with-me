@@ -24,7 +24,7 @@ public class StatsService {
     }
 
     public List<ViewStatsDto> getStatsSearchInterval(LocalDateTime start, boolean unique, List<String> uris) {
-        // TODO: 07.07.2023 change year to hours
+
         LocalDateTime endS = LocalDateTime.now().plusHours(INTERVAL_HOUR);
 
         return getStatsSearchInterval(start, endS, unique, uris);

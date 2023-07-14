@@ -105,7 +105,7 @@ public class EventMapper {
 
         List<EventFullDto> list = new ArrayList<>();
         for (Event event : events) {
-            Long views = 0L;
+            long views = 0L;
             if (stats != null && !stats.isEmpty()) {
                 views = stats.stream()
                         .filter(f -> Objects.equals(f.getUri(), "/events/" + event.getId()))

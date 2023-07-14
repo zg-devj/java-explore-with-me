@@ -71,7 +71,7 @@ public class ErrorHandler {
     // 409
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ApiError handleConflictException(ConflictException e) {
+    public ApiError handleConflictException(final ConflictException e) {
         log.warn(e.getMessage());
         return new ApiError(HttpStatus.CONFLICT.name(), e.getReason(), e.getMessage());
     }

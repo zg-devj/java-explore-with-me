@@ -35,7 +35,6 @@ public class EventRequestServiceImpl implements EventRequestService {
     }
 
     @Override
-//    @Transactional
     public ParticipationRequestDto participantAddRequest(long userId, long eventId) {
         User requestor = getUserCheck(userId);
         Event event = getEventCheck(eventId);

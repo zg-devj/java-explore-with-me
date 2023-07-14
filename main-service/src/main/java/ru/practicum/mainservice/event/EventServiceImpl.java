@@ -317,7 +317,6 @@ public class EventServiceImpl implements EventService {
                 .min(Comparator.comparing(Event::getCreatedOn))
                 .get().getCreatedOn();
 
-        // TODO: 12.07.2023 check date
         LocalDateTime end = param.getRangeEnd() != null ?
                 param.getRangeEnd() : LocalDateTime.now();
 
@@ -452,7 +451,6 @@ public class EventServiceImpl implements EventService {
                 .min(Comparator.comparing(Event::getCreatedOn))
                 .get().getCreatedOn();
 
-        // TODO: 12.07.2023 check date
         LocalDateTime end = param.getRangeEnd() != null ?
                 param.getRangeEnd() : LocalDateTime.now();
 

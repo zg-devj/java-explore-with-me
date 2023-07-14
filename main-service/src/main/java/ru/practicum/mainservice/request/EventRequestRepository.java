@@ -11,18 +11,6 @@ import java.util.Optional;
 
 public interface EventRequestRepository extends JpaRepository<EventRequest, Long> {
 
-//    // получит количество подтвержденных запросов на события
-//    @Query("select er.event.id as eventId, count(er.event.id) as confirmedCount from " +
-//            "EventRequest as er where er.status='CONFIRMED' and er.event.id in (?1) " +
-//            "group by er.event.id")
-//    List<IConfirmedRequests> findConfirmedRequestCounts(List<Long> eventIds);
-//
-//    // получит количество подтвержденных запросов на событие
-//    @Query("select er.event.id as eventId, count(er.event.id) as confirmedCount from " +
-//            "EventRequest as er where er.status='CONFIRMED' and er.event.id=?1 " +
-//            "group by er.event.id")
-//    IConfirmedRequests findConfirmedRequestCount(long eventId);
-
     // получение всех заявок пользователя на участие в событиях
     List<EventRequest> findAllByRequester(User requestor);
 
