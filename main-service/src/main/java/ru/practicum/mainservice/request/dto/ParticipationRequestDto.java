@@ -1,6 +1,9 @@
 package ru.practicum.mainservice.request.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import ru.practicum.mainservice.request.RequestStatus;
 
 import java.time.LocalDateTime;

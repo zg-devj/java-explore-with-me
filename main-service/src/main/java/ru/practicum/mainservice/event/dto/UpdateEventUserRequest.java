@@ -5,7 +5,6 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 import ru.practicum.mainservice.event.EventStateAction;
 
-import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 

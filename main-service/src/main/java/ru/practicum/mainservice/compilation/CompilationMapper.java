@@ -2,12 +2,12 @@ package ru.practicum.mainservice.compilation;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import ru.practicum.common.ViewStatsDto;
 import ru.practicum.mainservice.compilation.dto.CompilationDto;
 import ru.practicum.mainservice.compilation.dto.NewCompilationDto;
 import ru.practicum.mainservice.event.Event;
 import ru.practicum.mainservice.event.EventMapper;
 import ru.practicum.mainservice.event.dto.EventShortDto;
-import ru.practicum.mainservice.event.dto.ViewStats;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ public class CompilationMapper {
     }
 
     public static List<CompilationDto> compilationToCompilationDto(List<Compilation> compilations,
-                                                                   List<ViewStats> stats) {
+                                                                   List<ViewStatsDto> stats) {
         List<CompilationDto> list = new ArrayList<>();
         for (Compilation compilation : compilations) {
             if (compilation.getEvents() != null && !compilation.getEvents().isEmpty()) {

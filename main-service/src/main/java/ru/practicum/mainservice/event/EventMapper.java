@@ -5,8 +5,10 @@ import lombok.NoArgsConstructor;
 import ru.practicum.common.ViewStatsDto;
 import ru.practicum.mainservice.category.Category;
 import ru.practicum.mainservice.category.CategoryMapper;
-import ru.practicum.mainservice.event.dto.*;
-import ru.practicum.mainservice.request.model.IConfirmedRequests;
+import ru.practicum.mainservice.event.dto.EventFullDto;
+import ru.practicum.mainservice.event.dto.EventShortDto;
+import ru.practicum.mainservice.event.dto.Location;
+import ru.practicum.mainservice.event.dto.NewEventDto;
 import ru.practicum.mainservice.user.User;
 import ru.practicum.mainservice.user.UserMapper;
 
@@ -99,7 +101,7 @@ public class EventMapper {
     }
 
     public static List<EventFullDto> eventToEventFullDto(List<Event> events,
-                                                         List<ViewStats> stats) {
+                                                         List<ViewStatsDto> stats) {
 
         List<EventFullDto> list = new ArrayList<>();
         for (Event event : events) {
@@ -108,7 +110,7 @@ public class EventMapper {
                 views = stats.stream()
                         .filter(f -> Objects.equals(f.getUri(), "/events/" + event.getId()))
                         .findFirst()
-                        .map(ViewStats::getHits).orElse(0L);
+                        .map(ViewStatsDto::getHits).orElse(0L);
             }
             list.add(EventMapper.eventToEventFullDto(event, event.getUser(), views));
         }
@@ -116,7 +118,7 @@ public class EventMapper {
     }
 
     public static List<EventShortDto> eventToEventShortDto(List<Event> events, User initiator,
-                                                           List<ViewStats> stats) {
+                                                           List<ViewStatsDto> stats) {
         List<EventShortDto> list = new ArrayList<>();
         for (Event event : events) {
             Long views = 0L;
@@ -124,14 +126,14 @@ public class EventMapper {
                 views = stats.stream()
                         .filter(f -> Objects.equals(f.getUri(), "/events/" + event.getId()))
                         .findFirst()
-                        .map(ViewStats::getHits).orElse(0L);
+                        .map(ViewStatsDto::getHits).orElse(0L);
             }
             list.add(EventMapper.eventToEventShortDto(event, initiator, views));
         }
         return list;
     }
 
-    public static List<EventShortDto> eventToEventShortDto(List<Event> events, List<ViewStats> stats) {
+    public static List<EventShortDto> eventToEventShortDto(List<Event> events, List<ViewStatsDto> stats) {
         List<EventShortDto> list = new ArrayList<>();
         for (Event event : events) {
             Long views = 0L;
@@ -139,7 +141,7 @@ public class EventMapper {
                 views = stats.stream()
                         .filter(f -> Objects.equals(f.getUri(), "/events/" + event.getId()))
                         .findFirst()
-                        .map(ViewStats::getHits).orElse(0L);
+                        .map(ViewStatsDto::getHits).orElse(0L);
             }
             list.add(EventMapper.eventToEventShortDto(event, views));
         }

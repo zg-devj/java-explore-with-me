@@ -6,7 +6,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import ru.practicum.common.EndpointHitDto;
-import ru.practicum.common.ViewStatsDto;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;

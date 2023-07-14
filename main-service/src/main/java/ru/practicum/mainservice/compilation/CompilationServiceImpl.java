@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.common.ViewStatsDto;
 import ru.practicum.mainservice.compilation.dto.CompilationDto;
 import ru.practicum.mainservice.compilation.dto.NewCompilationDto;
 import ru.practicum.mainservice.compilation.dto.UpdateCompilationRequest;
@@ -11,7 +12,6 @@ import ru.practicum.mainservice.event.Event;
 import ru.practicum.mainservice.event.EventMapper;
 import ru.practicum.mainservice.event.EventRepository;
 import ru.practicum.mainservice.event.dto.EventShortDto;
-import ru.practicum.mainservice.event.dto.ViewStats;
 import ru.practicum.mainservice.exceptions.NotFoundException;
 import ru.practicum.mainservice.services.StatsService;
 
@@ -110,7 +110,7 @@ public class CompilationServiceImpl implements CompilationService {
                 .map(x -> "/events/" + x)
                 .collect(Collectors.toList());
 
-        List<ViewStats> stats = statsService.getStatsSearchInterval(start, end, false, uris);
+        List<ViewStatsDto> stats = statsService.getStatsSearchInterval(start, end, false, uris);
 
         return CompilationMapper.compilationToCompilationDto(compilations, stats);
     }
@@ -140,7 +140,7 @@ public class CompilationServiceImpl implements CompilationService {
                     .map(x -> "/events/" + x)
                     .collect(Collectors.toList());
 
-            List<ViewStats> stats = statsService.getStatsSearchInterval(start, end, false, uris);
+            List<ViewStatsDto> stats = statsService.getStatsSearchInterval(start, end, false, uris);
 
             List<EventShortDto> eventShortDtos = EventMapper.eventToEventShortDto(compilation.getEvents(), stats);
             return CompilationMapper.compilationToCompilationDto(compilation, eventShortDtos);

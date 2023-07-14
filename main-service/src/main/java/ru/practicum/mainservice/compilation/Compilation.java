@@ -4,9 +4,7 @@ import lombok.*;
 import ru.practicum.mainservice.event.Event;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Builder
 @Setter

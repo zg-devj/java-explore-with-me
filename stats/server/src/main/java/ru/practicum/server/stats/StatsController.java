@@ -1,7 +1,6 @@
 package ru.practicum.server.stats;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.common.EndpointHitDto;

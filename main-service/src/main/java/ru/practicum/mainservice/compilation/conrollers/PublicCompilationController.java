@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.mainservice.compilation.CompilationService;
 import ru.practicum.mainservice.compilation.dto.CompilationDto;
-import ru.practicum.mainservice.exceptions.BadRequestException;
 
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;

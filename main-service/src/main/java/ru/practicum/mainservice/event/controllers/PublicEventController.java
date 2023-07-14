@@ -17,7 +17,6 @@ import javax.validation.constraints.PositiveOrZero;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static ru.practicum.mainservice.utils.Util.DATE_TIME_FORMATTER;

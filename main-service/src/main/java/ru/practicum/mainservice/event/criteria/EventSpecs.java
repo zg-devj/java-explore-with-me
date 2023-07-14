@@ -4,12 +4,7 @@ import org.springframework.data.jpa.domain.Specification;
 import ru.practicum.mainservice.event.Event;
 import ru.practicum.mainservice.event.EventState;
 import ru.practicum.mainservice.event.Event_;
-import ru.practicum.mainservice.request.EventRequest;
-import ru.practicum.mainservice.request.EventRequest_;
-import ru.practicum.mainservice.user.User_;
 
-import javax.persistence.criteria.Join;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class EventSpecs {

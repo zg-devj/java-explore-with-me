@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.common.ViewStatsDto;
 import ru.practicum.mainservice.category.Category;
 import ru.practicum.mainservice.category.CategoryRepository;
 import ru.practicum.mainservice.event.dto.*;
@@ -69,7 +70,7 @@ public class EventServiceImpl implements EventService {
                 .map(x -> "/events/" + x)
                 .collect(Collectors.toList());
 
-        List<ViewStats> stats = statsService.getStatsSearchInterval(start, false, uris);
+        List<ViewStatsDto> stats = statsService.getStatsSearchInterval(start, false, uris);
 
         return EventMapper.eventToEventShortDto(events, initiator, stats);
     }
@@ -324,7 +325,7 @@ public class EventServiceImpl implements EventService {
                 .map(x -> "/events/" + x)
                 .collect(Collectors.toList());
 
-        List<ViewStats> stats = statsService.getStatsSearch(start, end, false, uris);
+        List<ViewStatsDto> stats = statsService.getStatsSearch(start, end, false, uris);
 
         // возвращаем результат
         return EventMapper.eventToEventFullDto(events, stats);
@@ -459,7 +460,7 @@ public class EventServiceImpl implements EventService {
                 .map(x -> "/events/" + x)
                 .collect(Collectors.toList());
 
-        List<ViewStats> stats = statsService.getStatsSearch(start, end, false, uris);
+        List<ViewStatsDto> stats = statsService.getStatsSearch(start, end, false, uris);
 
         List<EventShortDto> list = EventMapper.eventToEventShortDto(events, stats);
 
@@ -487,7 +488,7 @@ public class EventServiceImpl implements EventService {
         LocalDateTime start = event.getCreatedOn();
         List<String> uris = List.of("/events/" + event.getId());
 
-        List<ViewStats> stats = statsService.getStatsSearchInterval(start, unique, uris);
+        List<ViewStatsDto> stats = statsService.getStatsSearchInterval(start, unique, uris);
         long views = 0;
         if (stats != null && !stats.isEmpty()) {
             views = stats.get(0).getHits();

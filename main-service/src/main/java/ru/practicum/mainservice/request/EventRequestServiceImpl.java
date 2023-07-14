@@ -10,7 +10,6 @@ import ru.practicum.mainservice.event.EventState;
 import ru.practicum.mainservice.exceptions.ConflictException;
 import ru.practicum.mainservice.exceptions.NotFoundException;
 import ru.practicum.mainservice.request.dto.ParticipationRequestDto;
-import ru.practicum.mainservice.request.model.IConfirmedRequests;
 import ru.practicum.mainservice.user.User;
 import ru.practicum.mainservice.user.UserRepository;
 

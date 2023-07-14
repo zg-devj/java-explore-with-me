@@ -1,10 +1,8 @@
 package ru.practicum.mainservice.user;
 
 import lombok.*;
-import ru.practicum.mainservice.event.Event;
 
 import javax.persistence.*;
-import java.util.List;
 
 /**
  * Пользователь

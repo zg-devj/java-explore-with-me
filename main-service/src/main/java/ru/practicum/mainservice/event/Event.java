@@ -1,20 +1,14 @@
 package ru.practicum.mainservice.event;
 
 import lombok.*;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.LazyToOne;
-import org.hibernate.annotations.LazyToOneOption;
 import ru.practicum.mainservice.category.Category;
 import ru.practicum.mainservice.compilation.Compilation;
-import ru.practicum.mainservice.request.EventRequest;
 import ru.practicum.mainservice.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Builder
 @Setter

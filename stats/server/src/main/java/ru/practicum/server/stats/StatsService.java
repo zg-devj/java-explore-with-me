@@ -1,6 +1,5 @@
 package ru.practicum.server.stats;
 
-import org.springframework.data.domain.Pageable;
 import ru.practicum.common.EndpointHitDto;
 import ru.practicum.common.ViewStatsDto;
 
