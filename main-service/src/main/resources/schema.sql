@@ -1,6 +1,6 @@
 -- для тестирования
--- drop table if exists compilation_event;
--- drop table if exists compilations;
+drop table if exists compilation_event;
+drop table if exists compilations;
 drop table if exists requests;
 drop table if exists events;
 drop table if exists categories;
@@ -50,7 +50,7 @@ create table if not exists events
     event_date         timestamp without time zone,
     published_on       timestamp without time zone          default null,
     paid               boolean                     not null default false,
-    confirmed_requests  int                         not null default 0,
+    confirmed_requests int                         not null default 0,
     participant_limit  int                         not null default 0,
     request_moderation boolean                     not null default true,
     state              varchar(9)                  not null default 'PENDING',
@@ -71,24 +71,31 @@ create table if not exists requests
     constraint fk_requests_users foreign key (requester_id) references users (id),
     constraint uq_requests unique (event_id, requester_id)
 );
---
--- create table if not exists compilations
--- (
---     id     bigint generated always as identity,
---     title  varchar(50) not null,
---     pinned boolean     not null default false,
---     constraint pk_compilations primary key (id),
---     constraint uq_compilations_title unique (title)
--- );
---
--- create table if not exists compilation_event
--- (
---     compilation_id bigint not null
---         constraint compilation_event_compilations_fk references compilations,
---     event_id       bigint not null
---         constraint compilation_event_events_fk references events,
---     constraint uq_compilation_event unique (compilation_id, event_id)
--- );
+
+create table if not exists compilations
+(
+    id     bigint generated always as identity,
+    title  varchar(50) not null,
+    pinned boolean     not null default false,
+    constraint pk_compilations primary key (id),
+    constraint uq_compilations_title unique (title)
+);
+
+create table if not exists compilation_event
+(
+--     compilation_id bigint not null,
+--     event_id       bigint not null,
+--     constraint compilation_event_compilations_fk foreign key (compilation_id) references compilations (id),
+--     constraint compilation_event_events_fk foreign key (event_id) references events (id)
+    id             bigint generated always as identity,
+    compilation_id bigint not null
+        constraint compilation_event_compilations_fk references compilations,
+    event_id       bigint not null
+        constraint compilation_event_events_fk references events,
+    constraint pk_compilation_event primary key (id)
+-- ,
+--    constraint uq_compilation_event unique (compilation_id, event_id)
+);
 
 -- CREATE OR REPLACE FUNCTION distance(lat1 float, lon1 float, lat2 float, lon2 float)
 --     RETURNS float

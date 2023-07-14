@@ -1,7 +1,9 @@
 package ru.practicum.mainservice.compilation.conrollers;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.mainservice.compilation.CompilationService;
 import ru.practicum.mainservice.compilation.dto.CompilationDto;
 import ru.practicum.mainservice.exceptions.BadRequestException;
 
@@ -13,8 +15,11 @@ import java.util.List;
  */
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/compilations")
 public class PublicCompilationController {
+
+    private final CompilationService compilationService;
 
     // Получение подборок событий
     @GetMapping
@@ -23,9 +28,9 @@ public class PublicCompilationController {
             @RequestParam(required = false, defaultValue = "0") @PositiveOrZero int from,
             @RequestParam(required = false, defaultValue = "10") @PositiveOrZero int size
     ) {
-        log.info("GET /compilations?pinned={}&from={}&size={} - Получение подборок событий.", pined, from, size);
-        throw new BadRequestException("my message");
-        //return null;
+        log.info("GET /compilations?pinned={}&from={}&size={} - Getting collections of events.",
+                pined, from, size);
+        return compilationService.getCompilations(pined, from, size);
     }
 
     // Получение подборки событий по его id
@@ -33,7 +38,7 @@ public class PublicCompilationController {
     public CompilationDto getCompilation(
             @PathVariable long compId
     ) {
-        log.info("GET /compilation/{} - Получение подборки событий по его id.", compId);
-        return new CompilationDto();
+        log.info("GET /compilation/{} - Getting a selection of events by its id.", compId);
+        return compilationService.getCompilation(compId);
     }
 }

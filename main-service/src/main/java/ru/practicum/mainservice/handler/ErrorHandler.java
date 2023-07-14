@@ -12,7 +12,9 @@ import ru.practicum.mainservice.exceptions.*;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 @Slf4j
 @RestControllerAdvice
@@ -24,7 +26,7 @@ public class ErrorHandler {
     public ApiError handlerBadRequestException(final BadRequestException e) {
         log.warn(e.getMessage());
         return new ApiError(HttpStatus.BAD_REQUEST.name(), "An incorrectly made request.",
-                e.getMessage(), Collections.emptyList());
+                e.getMessage());
     }
 
     // 400 MissingServletRequestParameterException
@@ -33,7 +35,7 @@ public class ErrorHandler {
     public ApiError handlerMissingServletRequestParameterException(final MissingServletRequestParameterException e) {
         log.warn(e.getMessage());
         return new ApiError(HttpStatus.BAD_REQUEST.name(), "An incorrectly made request.",
-                e.getMessage(), Collections.emptyList());
+                e.getMessage());
     }
 
     // 400 MethodArgumentTypeMismatch
@@ -42,20 +44,20 @@ public class ErrorHandler {
     public ApiError handlerMethodArgumentTypeMismatch(final MethodArgumentTypeMismatchException e) {
         log.warn(e.getMessage());
         return new ApiError(HttpStatus.BAD_REQUEST.name(), "An incorrectly made request.",
-                e.getMessage(), Collections.emptyList());
+                e.getMessage());
     }
 
-    // 400
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError handlerMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
+    public ApiErrorExtended handlerMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
         log.warn(e.getMessage());
-        StringBuilder errors = new StringBuilder();
+        List<String> errors = new ArrayList<>();
         e.getBindingResult().getFieldErrors().forEach(
-                fieldError -> errors.append(new ErrorMessageField(fieldError.getField(),
+                fieldError -> errors.add(new ErrorMessageField(fieldError.getField(),
                         fieldError.getDefaultMessage()).getErrorMessage()));
-        return new ApiError(HttpStatus.BAD_REQUEST.name(), "An incorrectly made request.",
-                errors.toString(), Collections.emptyList());
+        return new ApiErrorExtended(HttpStatus.BAD_REQUEST.name(), "An incorrectly made request.",
+                "Invalid data.", errors);
     }
 
     // 404
@@ -63,8 +65,7 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiError handleNotFoundException(final NotFoundException e) {
         log.warn(e.getMessage());
-        return new ApiError(HttpStatus.NOT_FOUND.name(), "The required object was not found.", e.getMessage(),
-                Collections.emptyList());
+        return new ApiError(HttpStatus.NOT_FOUND.name(), "The required object was not found.", e.getMessage());
     }
 
     // 409
@@ -72,19 +73,18 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     public ApiError handleConflictException(ConflictException e) {
         log.warn(e.getMessage());
-        return new ApiError(HttpStatus.CONFLICT.name(), e.getReason(), e.getMessage(),
-                Collections.emptyList());
+        return new ApiError(HttpStatus.CONFLICT.name(), e.getReason(), e.getMessage());
     }
 
     // 500
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ApiError handlerException(final Exception e) {
+    public ApiErrorExtended handlerException(final Exception e) {
         log.error("Error", e);
         StringWriter out = new StringWriter();
         e.printStackTrace(new PrintWriter(out));
         String stackTrace = out.toString();
-        return new ApiError(HttpStatus.INTERNAL_SERVER_ERROR.name(), "An unexpected error has occurred.",
+        return new ApiErrorExtended(HttpStatus.INTERNAL_SERVER_ERROR.name(), "An unexpected error has occurred.",
                 e.getMessage(), Collections.singletonList(stackTrace));
     }
 }

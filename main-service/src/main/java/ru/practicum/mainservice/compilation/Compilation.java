@@ -1,10 +1,18 @@
 package ru.practicum.mainservice.compilation;
 
+import lombok.*;
 import ru.practicum.mainservice.event.Event;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
+@Builder
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "compilations")
 public class Compilation {
@@ -21,8 +29,8 @@ public class Compilation {
     @ManyToMany
     @JoinTable(
             name = "compilation_event",
-            joinColumns = @JoinColumn(name = "event_id"),
-            inverseJoinColumns = @JoinColumn(name = "compilation_id")
+            joinColumns = {@JoinColumn(name = "event_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "compilation_id", referencedColumnName = "id")}
     )
-    private Set<Event> events;
+    private List<Event> events = new ArrayList<>();
 }

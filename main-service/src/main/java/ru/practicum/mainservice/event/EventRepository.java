@@ -7,6 +7,7 @@ import ru.practicum.mainservice.user.User;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecificationExecutor<Event> {
 
@@ -18,4 +19,6 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
 
     Optional<Event> findFirstByIdAndState(long id, EventState state);
 
+    List<Event> findAllByIdInAndState(Set<Long> events, EventState state);
+    List<Event> findAllByIdIn(Set<Long> events);
 }

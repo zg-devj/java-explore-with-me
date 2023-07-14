@@ -29,13 +29,9 @@ public class ApiError {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private final LocalDateTime timestamp = LocalDateTime.now();
 
-    // Список StackTrace
-    private final List<String> errors;
-
-    public ApiError(String status, String reason, String message, List<String> errors) {
+    public ApiError(String status, String reason, String message) {
         this.status = status;
         this.reason = reason;
         this.message = message;
-        this.errors = errors;
     }
 }
