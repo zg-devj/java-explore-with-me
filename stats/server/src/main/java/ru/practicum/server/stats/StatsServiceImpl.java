@@ -33,16 +33,16 @@ public class StatsServiceImpl implements StatsService {
                 return statsMapper.viewStatsToViewStatsDto(statsRepository
                         .findResUniqueIP(start, end));
             } else {
-                return statsMapper.viewStatsToViewStatsDto(statsRepository.
-                        findResUniqueIPInUri(start, end, uris));
+                return statsMapper.viewStatsToViewStatsDto(statsRepository
+                        .findResUniqueIPInUri(start, end, uris));
             }
         } else {
             if (uris == null || uris.isEmpty()) {
-                return statsMapper.viewStatsToViewStatsDto(statsRepository.
-                        findRes(start, end));
+                return statsMapper.viewStatsToViewStatsDto(statsRepository
+                        .findRes(start, end));
             } else {
-                return statsMapper.viewStatsToViewStatsDto(statsRepository.
-                        findResInUri(start, end, uris));
+                return statsMapper.viewStatsToViewStatsDto(statsRepository
+                        .findResInUri(start, end, uris));
             }
         }
 

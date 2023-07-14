@@ -74,9 +74,9 @@ public class CompilationServiceImpl implements CompilationService {
         if (request.getEvents() != null && !request.getEvents().isEmpty()) {
             List<Event> events = eventRepository.findAllByIdIn(request.getEvents());
             for (Event event : events) {
-               if(!compilation.getEvents().contains(event)){
-                   compilation.getEvents().add(event);
-               }
+                if (!compilation.getEvents().contains(event)) {
+                    compilation.getEvents().add(event);
+                }
             }
         }
 

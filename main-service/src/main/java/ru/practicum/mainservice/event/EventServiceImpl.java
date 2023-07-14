@@ -297,11 +297,9 @@ public class EventServiceImpl implements EventService {
 
         PageRequest pageRequest = getPageRequest(param.getFrom(), param.getSize());
 
-        List<Event> events = eventRepository.findAll
-                (isUsersIn(param.getUsers())
-                                .and(isCategoriesIn(param.getCategories()))
-                                .and(isStatesIn(param.getStates())),
-                        pageRequest).getContent();
+        List<Event> events = eventRepository.findAll(isUsersIn(param.getUsers())
+                .and(isCategoriesIn(param.getCategories()))
+                .and(isStatesIn(param.getStates())), pageRequest).getContent();
 
         // если список пуст
         if (events.isEmpty()) {
@@ -534,11 +532,5 @@ public class EventServiceImpl implements EventService {
             throw new BadRequestException("Field: eventDate. Error: The date of the event cannot " +
                     "be earlier than two hours from the current time");
         }
-
-//        if (!newEventDate.isAfter(LocalDateTime.now().plusHours(afterHour))) {
-//            throw new ConflictException("Field: eventDate. Error: The date of the event cannot " +
-//                    "be earlier than two hours from the current time",
-//                    "The integrity constraint for a time change is violated.");
-//        }
     }
 }

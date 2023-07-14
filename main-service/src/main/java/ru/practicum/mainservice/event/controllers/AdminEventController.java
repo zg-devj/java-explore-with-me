@@ -44,7 +44,7 @@ public class AdminEventController {
         LocalDateTime end = decodedDateTime(rangeEnd);
 
         log.info("GET /admin/events?users={}&stats={}&categories={}" +
-                        "&rangeStart={}&rangeEnd={}&from={}&size={} - Поиск событий.",
+                        "&rangeStart={}&rangeEnd={}&from={}&size={} - Event search.",
                 users, states, categories, start, end, from, size);
 
         FindEventAdminParam eventParam = new FindEventAdminParam(users, states, categories, start, end, from, size);
@@ -58,7 +58,7 @@ public class AdminEventController {
             @RequestBody @Valid UpdateEventAdminRequest updateEventAdminRequest
     ) {
         log.info("PATCH /admin/events/{} - " +
-                "Редактирование данных события и его статуса (отклонение/публикация)..", eventId);
+                "Editing event data and its status (rejection/publication).", eventId);
         return eventService.adminUpdateEvent(eventId, updateEventAdminRequest);
     }
 

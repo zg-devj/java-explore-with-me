@@ -62,7 +62,7 @@ public class PublicEventController {
 
         log.info("GET /events?test={}&categories={}&paid={}&rangeStart={}" +
                         "&rangeEnd={}&onlyAvailable={}&sort={}&from={}&size={} - " +
-                        "Получение событий с возможностью фильтрации.", text, categories, paid, rangeStart,
+                        "Receiving events with the possibility of filtering.", text, categories, paid, rangeStart,
                 rangeEnd, onlyAvailable, sort, from, size);
 
         FindEventPublicParam param = new FindEventPublicParam(text, categories, paid, start,
@@ -86,7 +86,7 @@ public class PublicEventController {
             HttpServletRequest request
     ) {
         log.info("GET /events/{} - " +
-                "Получение подробной информации об опубликованном событии по его идентификатору.", eventId);
+                "Getting detailed information about a published event by its ID.", eventId);
         EventFullDto eventFullDto = eventService.publicGetEvent(eventId);
         EndpointHitDto hitDto = EndpointHitDto.builder()
                 .app("main-service")
