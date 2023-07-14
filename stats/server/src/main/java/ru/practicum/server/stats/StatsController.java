@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.common.EndpointHitDto;
 import ru.practicum.common.ViewStatsDto;
+import ru.practicum.server.stats.exceptions.BadRequestException;
 
 import javax.validation.Valid;
 import java.net.URLDecoder;
@@ -37,6 +38,10 @@ public class StatsController {
     ) {
         LocalDateTime startD = decodedDateTime(start);
         LocalDateTime endD = decodedDateTime(end);
+
+        if (startD.isAfter(endD)) {
+            throw new BadRequestException("The start date must not be later than the end date");
+        }
 
         return statsService.stats(startD, endD, uris, unique);
     }

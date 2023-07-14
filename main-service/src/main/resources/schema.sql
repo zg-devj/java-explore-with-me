@@ -83,18 +83,15 @@ create table if not exists compilations
 
 create table if not exists compilation_event
 (
---     compilation_id bigint not null,
---     event_id       bigint not null,
---     constraint compilation_event_compilations_fk foreign key (compilation_id) references compilations (id),
---     constraint compilation_event_events_fk foreign key (event_id) references events (id)
+    compilation_id bigint not null,
+    event_id       bigint not null,
     id             bigint generated always as identity,
-    compilation_id bigint not null
-        constraint compilation_event_compilations_fk references compilations,
-    event_id       bigint not null
-        constraint compilation_event_events_fk references events,
     constraint pk_compilation_event primary key (id)
--- ,
---    constraint uq_compilation_event unique (compilation_id, event_id)
+--     ,
+--     constraint compilation_event_compilations_fk foreign key (compilation_id) references compilations (id)
+--         on delete restrict,
+--     constraint compilation_event_events_fk foreign key (event_id) references events (id)
+--         on delete restrict
 );
 
 -- CREATE OR REPLACE FUNCTION distance(lat1 float, lon1 float, lat2 float, lon2 float)

@@ -46,8 +46,10 @@ public class PublicEventController {
             @RequestParam(defaultValue = "false") boolean onlyAvailable,
             @RequestParam(required = false, defaultValue = "EVENT_DATE") EventSort sort,
             @RequestParam(required = false, defaultValue = "0") @PositiveOrZero int from,
-            @RequestParam(required = false, defaultValue = "10") @PositiveOrZero int size
+            @RequestParam(required = false, defaultValue = "10") @PositiveOrZero int size,
+            HttpServletRequest request
     ) {
+        System.out.println(request.getRequestURI());
         LocalDateTime start = decodedDateTime(rangeStart);
         LocalDateTime end = decodedDateTime(rangeEnd);
 
@@ -67,7 +69,15 @@ public class PublicEventController {
         FindEventPublicParam param = new FindEventPublicParam(text, categories, paid, start,
                 end, onlyAvailable, sort, from, size);
 
-        return eventService.publicFindEvents(param);
+        List<EventShortDto> list = eventService.publicFindEvents(param);
+        EndpointHitDto hitDto = EndpointHitDto.builder()
+                .app("main-service")
+                .ip(request.getRemoteAddr())
+                .uri(request.getRequestURI())
+                .timestamp(LocalDateTime.now())
+                .build();
+        statsService.hit(hitDto);
+        return list;
     }
 
     // Получение подробной информации об опубликованном событии по его идентификатору

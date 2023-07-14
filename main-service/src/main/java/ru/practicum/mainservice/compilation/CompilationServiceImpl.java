@@ -36,7 +36,7 @@ public class CompilationServiceImpl implements CompilationService {
     // private
 
     @Override
-//    @Transactional
+    @Transactional
     public CompilationDto adminAddCompilation(NewCompilationDto newCompilationDto) {
 
         List<Event> events = new ArrayList<>();
@@ -44,17 +44,14 @@ public class CompilationServiceImpl implements CompilationService {
             events = eventRepository.findAllByIdIn(newCompilationDto.getEvents());
         }
 
-        //Compilation compilation = CompilationMapper.newCompilationDtoToCompilation(newCompilationDto, events);
-
         Compilation compilation = Compilation.builder()
                 .pinned(newCompilationDto.isPinned())
                 .title(newCompilationDto.getTitle())
+                .events(events)
                 .build();
 
         Compilation saved = compilationRepository.save(compilation);
-        saved.setEvents(events);
-        Compilation saved2 = compilationRepository.save(saved);
-        return getCompilationDto(saved2);
+        return getCompilationDto(saved);
     }
 
     @Override
@@ -64,7 +61,27 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     public CompilationDto adminUpdateCompilation(long compilationId, UpdateCompilationRequest request) {
-        return null;
+        Compilation compilation = compilationRepository.findById(compilationId)
+                .orElseThrow(() -> new NotFoundException(
+                        String.format("Compilation with id=%d was not found", compilationId)));
+
+        compilation.setPinned(request.isPinned());
+
+        if (request.getTitle() != null) {
+            compilation.setTitle(request.getTitle());
+        }
+
+        if (request.getEvents() != null && !request.getEvents().isEmpty()) {
+            List<Event> events = eventRepository.findAllByIdIn(request.getEvents());
+            for (Event event : events) {
+               if(!compilation.getEvents().contains(event)){
+                   compilation.getEvents().add(event);
+               }
+            }
+        }
+
+        Compilation saved = compilationRepository.save(compilation);
+        return getCompilationDto(saved);
     }
 
     // public
