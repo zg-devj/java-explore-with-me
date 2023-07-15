@@ -16,9 +16,7 @@ import ru.practicum.mainservice.exceptions.NotFoundException;
 import ru.practicum.mainservice.services.StatsService;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static ru.practicum.mainservice.compilation.criteria.CompilationSpecs.isPinnedTrue;
@@ -38,8 +36,7 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     @Transactional
     public CompilationDto adminAddCompilation(NewCompilationDto newCompilationDto) {
-
-        List<Event> events = new ArrayList<>();
+        Set<Event> events = new HashSet<>();
         if (newCompilationDto.getEvents() != null && !newCompilationDto.getEvents().isEmpty()) {
             events = eventRepository.findAllByIdIn(newCompilationDto.getEvents());
         }
@@ -72,7 +69,7 @@ public class CompilationServiceImpl implements CompilationService {
         }
 
         if (request.getEvents() != null && !request.getEvents().isEmpty()) {
-            List<Event> events = eventRepository.findAllByIdIn(request.getEvents());
+            Set<Event> events = eventRepository.findAllByIdIn(request.getEvents());
             for (Event event : events) {
                 if (!compilation.getEvents().contains(event)) {
                     compilation.getEvents().add(event);
@@ -142,7 +139,8 @@ public class CompilationServiceImpl implements CompilationService {
 
             List<ViewStatsDto> stats = statsService.getStatsSearchInterval(start, end, false, uris);
 
-            List<EventShortDto> eventShortDtos = EventMapper.eventToEventShortDto(compilation.getEvents(), stats);
+            List<EventShortDto> eventShortDtos = EventMapper.eventToEventShortDto(
+                    new ArrayList<>(compilation.getEvents()), stats);
             return CompilationMapper.compilationToCompilationDto(compilation, eventShortDtos);
         } else {
             return CompilationMapper.compilationToCompilationDto(compilation, new ArrayList<>());

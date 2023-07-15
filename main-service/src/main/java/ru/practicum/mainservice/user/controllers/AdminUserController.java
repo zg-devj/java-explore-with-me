@@ -9,6 +9,7 @@ import ru.practicum.mainservice.user.dto.NewUserRequest;
 import ru.practicum.mainservice.user.dto.UserDto;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
@@ -27,8 +28,8 @@ public class AdminUserController {
     @GetMapping
     public List<UserDto> adminGetUsers(
             @RequestParam(required = false) List<Long> ids,
-            @RequestParam(required = false, defaultValue = "0") @PositiveOrZero int from,
-            @RequestParam(required = false, defaultValue = "10") @PositiveOrZero int size
+            @RequestParam(defaultValue = "0") @PositiveOrZero int from,
+            @RequestParam(defaultValue = "10") @Positive int size
     ) {
         log.info("GET /admin/users?ids={}&from={}&size={} - Getting information about all users.",
                 ids, from, size);

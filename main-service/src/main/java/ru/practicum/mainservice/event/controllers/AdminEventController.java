@@ -10,6 +10,7 @@ import ru.practicum.mainservice.event.dto.UpdateEventAdminRequest;
 import ru.practicum.mainservice.event.params.FindEventAdminParam;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -37,8 +38,8 @@ public class AdminEventController {
             @RequestParam(required = false) List<Long> categories,
             @RequestParam(required = false) String rangeStart,
             @RequestParam(required = false) String rangeEnd,
-            @RequestParam(required = false, defaultValue = "0") @PositiveOrZero int from,
-            @RequestParam(required = false, defaultValue = "10") @PositiveOrZero int size
+            @RequestParam(defaultValue = "0") @PositiveOrZero int from,
+            @RequestParam(defaultValue = "10") @Positive int size
     ) {
         LocalDateTime start = decodedDateTime(rangeStart);
         LocalDateTime end = decodedDateTime(rangeEnd);

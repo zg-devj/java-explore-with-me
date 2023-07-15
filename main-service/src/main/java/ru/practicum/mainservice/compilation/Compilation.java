@@ -4,7 +4,8 @@ import lombok.*;
 import ru.practicum.mainservice.event.Event;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Builder
 @Setter
@@ -24,11 +25,27 @@ public class Compilation {
     // Закреплена ли подборка на главной странице сайта
     private Boolean pinned;
 
-    @ManyToMany
-    @JoinTable(
-            name = "compilation_event",
-            joinColumns = {@JoinColumn(name = "event_id")},
-            inverseJoinColumns = {@JoinColumn(name = "compilation_id")}
-    )
-    private List<Event> events;
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
+    @JoinTable(name = "compilation_events",
+            joinColumns = { @JoinColumn(name = "compilation_id") },
+            inverseJoinColumns = { @JoinColumn(name = "event_id") })
+    private Set<Event> events = new HashSet<>();
+
+    public void addEvent(Event event) {
+        this.events.add(event);
+        event.getCompilations().add(this);
+    }
+
+    public void removeEvent(long eventId) {
+        Event event = this.events.stream().filter(e -> e.getId() == eventId)
+                .findFirst().orElse(null);
+        if (event != null) {
+            this.events.remove(event);
+            event.getCompilations().remove(this);
+        }
+    }
 }

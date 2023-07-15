@@ -7,8 +7,8 @@ import ru.practicum.mainservice.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Builder
 @Setter
@@ -82,7 +82,11 @@ public class Event {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    //    @ManyToMany(mappedBy = "events", fetch = FetchType.LAZY)
-    @ManyToMany(mappedBy = "events")
-    private List<Compilation> compilations = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            },
+            mappedBy = "events")
+    private Set<Compilation> compilations = new HashSet<>();
 }

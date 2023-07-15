@@ -13,6 +13,7 @@ import ru.practicum.mainservice.exceptions.BadRequestException;
 import ru.practicum.mainservice.services.StatsService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -43,9 +44,9 @@ public class PublicEventController {
             @RequestParam(required = false) String rangeStart,
             @RequestParam(required = false) String rangeEnd,
             @RequestParam(defaultValue = "false") boolean onlyAvailable,
-            @RequestParam(required = false, defaultValue = "EVENT_DATE") EventSort sort,
-            @RequestParam(required = false, defaultValue = "0") @PositiveOrZero int from,
-            @RequestParam(required = false, defaultValue = "10") @PositiveOrZero int size,
+            @RequestParam(defaultValue = "EVENT_DATE") EventSort sort,
+            @RequestParam(defaultValue = "0") @PositiveOrZero int from,
+            @RequestParam(defaultValue = "10") @Positive int size,
             HttpServletRequest request
     ) {
         System.out.println(request.getRequestURI());

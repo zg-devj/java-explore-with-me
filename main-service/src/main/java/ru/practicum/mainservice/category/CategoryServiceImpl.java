@@ -23,7 +23,6 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
 
     @Override
-    @Transactional(readOnly = true)
     public CategoryDto findCategoryById(long categoryId) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new NotFoundException(String.format("Category with id=%d not found.", categoryId)));
@@ -31,37 +30,32 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<CategoryDto> findAllCategories(int from, int size) {
         PageRequest pageRequest = getPageRequest(from, size);
         return CategoryMapper.categoryToCategoryDto(categoryRepository.findAll(pageRequest).toList());
     }
 
     @Override
-    @Transactional
     public CategoryDto createCategory(NewCategoryDto newCategoryDto) {
-        Category newCategory = CategoryMapper.newCategoryDtoToCategory(newCategoryDto);
         try {
-            Category saved = categoryRepository.saveAndFlush(newCategory);
-            return CategoryMapper.categoryToCategoryDto(saved);
+            return CategoryMapper.categoryToCategoryDto(
+                    categoryRepository.save(CategoryMapper.newCategoryDtoToCategory(newCategoryDto)));
         } catch (DataIntegrityViolationException e) {
             throw new ConflictException("The integrity constraint has been violated.", e.getMessage());
         }
     }
 
     @Override
-    @Transactional
     public CategoryDto updateCategory(long categoryId, CategoryDto categoryDto) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new NotFoundException(String.format("Category with id=%d not found.", categoryId)));
         category.setName(categoryDto.getName());
         try {
-            Category updated = categoryRepository.saveAndFlush(category);
+            Category updated = categoryRepository.save(category);
             return CategoryMapper.categoryToCategoryDto(updated);
         } catch (DataAccessException e) {
             throw new ConflictException(e.getMessage(), "The integrity constraint has been violated.");
         }
-
     }
 
     @Override

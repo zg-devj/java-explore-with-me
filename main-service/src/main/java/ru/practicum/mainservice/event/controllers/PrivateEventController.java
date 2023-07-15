@@ -9,6 +9,7 @@ import ru.practicum.mainservice.event.dto.*;
 import ru.practicum.mainservice.request.dto.ParticipationRequestDto;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
@@ -27,8 +28,8 @@ public class PrivateEventController {
     @GetMapping("/{userId}/events")
     public List<EventShortDto> initiatorGetEvents(
             @PathVariable long userId,
-            @RequestParam(required = false, defaultValue = "0") @PositiveOrZero int from,
-            @RequestParam(required = false, defaultValue = "10") @PositiveOrZero int size
+            @RequestParam(defaultValue = "0") @PositiveOrZero int from,
+            @RequestParam(defaultValue = "10") @Positive int size
     ) {
         log.info("GET /users/{}/events - Getting events added by the current user.", userId);
         return eventService.initiatorGetEvents(userId, from, size);

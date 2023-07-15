@@ -1,20 +1,10 @@
 -- для тестирования
-drop table if exists compilation_event;
+drop table if exists compilation_events;
 drop table if exists compilations;
 drop table if exists requests;
 drop table if exists events;
 drop table if exists categories;
 drop table if exists users;
--- drop table if exists locations;
-
--- локации
--- create table if not exists locations
--- (
---     id  bigint generated always as identity,
---     lat real not null,
---     lon real not null,
---     constraint pk_locations primary key (id)
--- );
 
 -- пользователи
 create table if not exists users
@@ -81,17 +71,13 @@ create table if not exists compilations
     constraint uq_compilations_title unique (title)
 );
 
-create table if not exists compilation_event
+create table if not exists compilation_events
 (
-    compilation_id bigint not null,
-    event_id       bigint not null,
-    id             bigint generated always as identity,
-    constraint pk_compilation_event primary key (id)
---     ,
---     constraint compilation_event_compilations_fk foreign key (compilation_id) references compilations (id)
---         on delete restrict,
---     constraint compilation_event_events_fk foreign key (event_id) references events (id)
---         on delete restrict
+    compilation_id bigint not null
+        constraint fk_compilation_events_compilations references compilations,
+    event_id       bigint not null
+        constraint fk_compilation_events_events references events,
+    constraint pk_compilation_events primary key (compilation_id, event_id)
 );
 
 -- CREATE OR REPLACE FUNCTION distance(lat1 float, lon1 float, lat2 float, lon2 float)

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.mainservice.compilation.CompilationService;
 import ru.practicum.mainservice.compilation.dto.CompilationDto;
 
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
@@ -24,8 +25,8 @@ public class PublicCompilationController {
     @GetMapping
     public List<CompilationDto> getCompilations(
             @RequestParam(required = false) boolean pined, // false
-            @RequestParam(required = false, defaultValue = "0") @PositiveOrZero int from,
-            @RequestParam(required = false, defaultValue = "10") @PositiveOrZero int size
+            @RequestParam(defaultValue = "0") @PositiveOrZero int from,
+            @RequestParam(defaultValue = "10") @Positive int size
     ) {
         log.info("GET /compilations?pinned={}&from={}&size={} - Getting collections of events.",
                 pined, from, size);
