@@ -8,7 +8,7 @@ import ru.practicum.mainservice.event.EventService;
 import ru.practicum.mainservice.event.EventSort;
 import ru.practicum.mainservice.event.dto.EventFullDto;
 import ru.practicum.mainservice.event.dto.EventShortDto;
-import ru.practicum.mainservice.event.params.FindEventPublicParam;
+import ru.practicum.mainservice.event.dto.params.FindEventPublicParam;
 import ru.practicum.mainservice.exceptions.BadRequestException;
 import ru.practicum.mainservice.services.StatsService;
 
@@ -100,7 +100,9 @@ public class PublicEventController {
     }
 
     private LocalDateTime decodedDateTime(String datetime) {
-        if (datetime == null) return null;
+        if (datetime == null) {
+            return null;
+        }
         return LocalDateTime.parse(URLDecoder.decode(datetime, StandardCharsets.UTF_8), DATE_TIME_FORMATTER);
     }
 }

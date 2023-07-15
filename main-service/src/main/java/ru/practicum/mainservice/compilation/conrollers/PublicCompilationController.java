@@ -24,13 +24,13 @@ public class PublicCompilationController {
     // Получение подборок событий
     @GetMapping
     public List<CompilationDto> getCompilations(
-            @RequestParam(required = false) boolean pined, // false
+            @RequestParam(defaultValue = "false") boolean pinned,
             @RequestParam(defaultValue = "0") @PositiveOrZero int from,
             @RequestParam(defaultValue = "10") @Positive int size
     ) {
         log.info("GET /compilations?pinned={}&from={}&size={} - Getting collections of events.",
-                pined, from, size);
-        return compilationService.getCompilations(pined, from, size);
+                pinned, from, size);
+        return compilationService.getCompilations(pinned, from, size);
     }
 
     // Получение подборки событий по его id

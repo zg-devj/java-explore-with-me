@@ -49,6 +49,7 @@ create table if not exists events
     constraint fk_events_categories foreign key (category_id) references categories (id) on delete restrict
 );
 
+-- запросы на участие
 create table if not exists requests
 (
     id           bigint generated always as identity,
@@ -62,6 +63,7 @@ create table if not exists requests
     constraint uq_requests unique (event_id, requester_id)
 );
 
+-- подборки
 create table if not exists compilations
 (
     id     bigint generated always as identity,
@@ -71,6 +73,7 @@ create table if not exists compilations
     constraint uq_compilations_title unique (title)
 );
 
+-- отношение подборок и событий
 create table if not exists compilation_events
 (
     compilation_id bigint not null

@@ -57,19 +57,19 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     @Override
-    public CompilationDto adminUpdateCompilation(long compilationId, UpdateCompilationRequest request) {
+    public CompilationDto adminUpdateCompilation(long compilationId, UpdateCompilationRequest compilationRequest) {
         Compilation compilation = compilationRepository.findById(compilationId)
                 .orElseThrow(() -> new NotFoundException(
                         String.format("Compilation with id=%d was not found", compilationId)));
 
-        compilation.setPinned(request.isPinned());
+        compilation.setPinned(compilationRequest.isPinned());
 
-        if (request.getTitle() != null) {
-            compilation.setTitle(request.getTitle());
+        if (compilationRequest.getTitle() != null) {
+            compilation.setTitle(compilationRequest.getTitle());
         }
 
-        if (request.getEvents() != null && !request.getEvents().isEmpty()) {
-            Set<Event> events = eventRepository.findAllByIdIn(request.getEvents());
+        if (compilationRequest.getEvents() != null && !compilationRequest.getEvents().isEmpty()) {
+            Set<Event> events = eventRepository.findAllByIdIn(compilationRequest.getEvents());
             for (Event event : events) {
                 if (!compilation.getEvents().contains(event)) {
                     compilation.getEvents().add(event);

@@ -13,7 +13,7 @@ public interface CompilationService {
 
     void adminRemoveCompilation(long compilationId);
 
-    CompilationDto adminUpdateCompilation(long compilationId, UpdateCompilationRequest request);
+    CompilationDto adminUpdateCompilation(long compilationId, UpdateCompilationRequest compilationRequest);
 
     // public
 

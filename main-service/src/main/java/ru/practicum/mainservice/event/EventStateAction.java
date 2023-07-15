@@ -9,8 +9,10 @@ package ru.practicum.mainservice.event;
  * REJECT_EVENT - отклонение (admin), если не в опубликовано
  */
 public enum EventStateAction {
-    SEND_TO_REVIEW(Group.Initiator), PUBLISH_EVENT(Group.Admin),
-    CANCEL_REVIEW(Group.Initiator), REJECT_EVENT(Group.Admin);
+    SEND_TO_REVIEW(Group.Initiator),
+    PUBLISH_EVENT(Group.Admin),
+    CANCEL_REVIEW(Group.Initiator),
+    REJECT_EVENT(Group.Admin);
 
     private final Group group;
 

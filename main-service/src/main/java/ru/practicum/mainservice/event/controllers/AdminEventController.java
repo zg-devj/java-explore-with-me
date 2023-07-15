@@ -7,7 +7,7 @@ import ru.practicum.mainservice.event.EventService;
 import ru.practicum.mainservice.event.EventState;
 import ru.practicum.mainservice.event.dto.EventFullDto;
 import ru.practicum.mainservice.event.dto.UpdateEventAdminRequest;
-import ru.practicum.mainservice.event.params.FindEventAdminParam;
+import ru.practicum.mainservice.event.dto.params.FindEventAdminParam;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
@@ -64,7 +64,9 @@ public class AdminEventController {
     }
 
     private LocalDateTime decodedDateTime(String datetime) {
-        if (datetime == null) return null;
+        if (datetime == null) {
+            return null;
+        }
         return LocalDateTime.parse(URLDecoder.decode(datetime, StandardCharsets.UTF_8), DATE_TIME_FORMATTER);
     }
 }
