@@ -7,6 +7,7 @@ import ru.practicum.mainservice.user.User_;
 import java.util.List;
 
 public class UserSpecs {
+    // Отфильтровать по списку идентификаторов пользователя
     public static Specification<User> isIdsIn(List<Long> ids) {
         return (root, query, criteriaBuilder) -> {
             if (ids != null && !ids.isEmpty()) {

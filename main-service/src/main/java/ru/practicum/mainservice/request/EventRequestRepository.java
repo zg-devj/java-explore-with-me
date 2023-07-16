@@ -20,9 +20,6 @@ public interface EventRequestRepository extends JpaRepository<EventRequest, Long
     // получение заявок по событию
     List<EventRequest> findAllByEventId(long eventId);
 
-    // получение запросов по идентификаторам, и событию
-    List<EventRequest> findAllByIdInAndEvent(List<Long> ids, Event event);
-
     List<EventRequest> findAllByEventIdAndStatusNot(long eventId, RequestStatus status);
 
     @Query("update EventRequest as er set er.status=?2 where er.event.id=?1")

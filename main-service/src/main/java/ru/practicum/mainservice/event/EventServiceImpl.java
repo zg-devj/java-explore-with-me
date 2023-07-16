@@ -22,13 +22,11 @@ import ru.practicum.mainservice.request.RequestStatus;
 import ru.practicum.mainservice.request.dto.ParticipationRequestDto;
 import ru.practicum.mainservice.services.StatsService;
 import ru.practicum.mainservice.user.User;
+import ru.practicum.mainservice.user.UserMapper;
 import ru.practicum.mainservice.user.UserRepository;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static ru.practicum.mainservice.event.criteria.EventSpecs.*;
@@ -72,7 +70,7 @@ public class EventServiceImpl implements EventService {
 
         List<ViewStatsDto> stats = statsService.getStatsSearchInterval(start, false, uris);
 
-        return EventMapper.eventToEventShortDto(events, initiator, stats);
+        return EventMapper.eventToEventShortDto(events, stats, UserMapper.userToUserShortDto(initiator));
     }
 
     @Override
@@ -88,11 +86,12 @@ public class EventServiceImpl implements EventService {
 
         try {
             Event createdEvent = eventRepository.save(newEvent);
-            return EventMapper.eventToEventFullDto(createdEvent, initiator, 0);
+            return EventMapper.eventToEventFullDto(createdEvent, UserMapper.userToUserShortDto(initiator), 0);
         } catch (DataIntegrityViolationException e) {
             throw new ConflictException("The integrity constraint has been violated.", e.getMessage());
         }
     }
+
 
     @Override
     @Transactional(readOnly = true)
@@ -490,7 +489,7 @@ public class EventServiceImpl implements EventService {
             views = stats.get(0).getHits();
         }
 
-        return EventMapper.eventToEventFullDto(event, initiator, views);
+        return EventMapper.eventToEventFullDto(event, UserMapper.userToUserShortDto(initiator), views);
     }
 
     // получение инициатора по id

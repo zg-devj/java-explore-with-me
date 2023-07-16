@@ -17,7 +17,9 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
     // получение события по id и инициатору
     Optional<Event> findFirstByIdAndUserId(long eventId, long userId);
 
+    // получение события по id и статусу
     Optional<Event> findFirstByIdAndState(long id, EventState state);
 
+    // получение событий по идентификаторам
     Set<Event> findAllByIdIn(Set<Long> events);
 }

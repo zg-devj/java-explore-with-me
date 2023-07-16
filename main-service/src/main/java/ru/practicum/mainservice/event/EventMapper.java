@@ -11,6 +11,7 @@ import ru.practicum.mainservice.event.dto.Location;
 import ru.practicum.mainservice.event.dto.NewEventDto;
 import ru.practicum.mainservice.user.User;
 import ru.practicum.mainservice.user.UserMapper;
+import ru.practicum.mainservice.user.dto.UserShortDto;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,9 +23,15 @@ public class EventMapper {
     public static Event newEventDtoToEvent(NewEventDto newEventDto, User user, Category category) {
 
         // Set default value
-        if (newEventDto.getPaid() == null) newEventDto.setPaid(false);
-        if (newEventDto.getParticipantLimit() == null) newEventDto.setParticipantLimit(0);
-        if (newEventDto.getRequestModeration() == null) newEventDto.setRequestModeration(true);
+        if (newEventDto.getPaid() == null) {
+            newEventDto.setPaid(false);
+        }
+        if (newEventDto.getParticipantLimit() == null) {
+            newEventDto.setParticipantLimit(0);
+        }
+        if (newEventDto.getRequestModeration() == null) {
+            newEventDto.setRequestModeration(true);
+        }
 
         return Event.builder()
                 .user(user)
@@ -44,7 +51,7 @@ public class EventMapper {
                 .build();
     }
 
-    public static EventFullDto eventToEventFullDto(Event event, User initiator, long views) {
+    public static EventFullDto eventToEventFullDto(Event event, UserShortDto userShortDto, long views) {
         Location location = Location.builder()
                 .lat(event.getLat())
                 .lon(event.getLon()).build();
@@ -57,7 +64,7 @@ public class EventMapper {
         eventFullDto.setDescription(event.getDescription());
         eventFullDto.setEventDate(event.getEventDate());
         eventFullDto.setId(event.getId());
-        eventFullDto.setInitiator(UserMapper.userToUserShortDto(initiator));
+        eventFullDto.setInitiator(userShortDto);
         eventFullDto.setLocation(location);
         eventFullDto.setPaid(event.getPaid());
         eventFullDto.setParticipantLimit(event.getParticipantLimit());
@@ -70,14 +77,14 @@ public class EventMapper {
         return eventFullDto;
     }
 
-    public static EventShortDto eventToEventShortDto(Event event, User initiator, Long views) {
+    public static EventShortDto eventToEventShortDto(Event event, long views, UserShortDto initiator) {
         EventShortDto eventShortDto = new EventShortDto();
         eventShortDto.setAnnotation(event.getAnnotation());
         eventShortDto.setCategory(CategoryMapper.categoryToCategoryDto(event.getCategory()));
         eventShortDto.setConfirmedRequests(event.getConfirmedRequests());
         eventShortDto.setEventDate(event.getEventDate());
         eventShortDto.setId(event.getId());
-        eventShortDto.setInitiator(UserMapper.userToUserShortDto(initiator));
+        eventShortDto.setInitiator(initiator);
         eventShortDto.setPaid(event.getPaid());
         eventShortDto.setTitle(event.getTitle());
         eventShortDto.setViews(views);
@@ -85,7 +92,7 @@ public class EventMapper {
         return eventShortDto;
     }
 
-    public static EventShortDto eventToEventShortDto(Event event, Long views) {
+    public static EventShortDto eventToEventShortDto(Event event, long views) {
         EventShortDto eventShortDto = new EventShortDto();
         eventShortDto.setAnnotation(event.getAnnotation());
         eventShortDto.setCategory(CategoryMapper.categoryToCategoryDto(event.getCategory()));
@@ -100,8 +107,7 @@ public class EventMapper {
         return eventShortDto;
     }
 
-    public static List<EventFullDto> eventToEventFullDto(List<Event> events,
-                                                         List<ViewStatsDto> stats) {
+    public static List<EventFullDto> eventToEventFullDto(List<Event> events, List<ViewStatsDto> stats) {
 
         List<EventFullDto> list = new ArrayList<>();
         for (Event event : events) {
@@ -112,23 +118,23 @@ public class EventMapper {
                         .findFirst()
                         .map(ViewStatsDto::getHits).orElse(0L);
             }
-            list.add(EventMapper.eventToEventFullDto(event, event.getUser(), views));
+            list.add(EventMapper.eventToEventFullDto(event, UserMapper.userToUserShortDto(event.getUser()), views));
         }
         return list;
     }
 
-    public static List<EventShortDto> eventToEventShortDto(List<Event> events, User initiator,
-                                                           List<ViewStatsDto> stats) {
+    public static List<EventShortDto> eventToEventShortDto(List<Event> events, List<ViewStatsDto> stats,
+                                                           UserShortDto userShortDto) {
         List<EventShortDto> list = new ArrayList<>();
         for (Event event : events) {
-            Long views = 0L;
+            long views = 0L;
             if (stats != null && !stats.isEmpty()) {
                 views = stats.stream()
                         .filter(f -> Objects.equals(f.getUri(), "/events/" + event.getId()))
                         .findFirst()
                         .map(ViewStatsDto::getHits).orElse(0L);
             }
-            list.add(EventMapper.eventToEventShortDto(event, initiator, views));
+            list.add(EventMapper.eventToEventShortDto(event, views, userShortDto));
         }
         return list;
     }
@@ -136,7 +142,7 @@ public class EventMapper {
     public static List<EventShortDto> eventToEventShortDto(List<Event> events, List<ViewStatsDto> stats) {
         List<EventShortDto> list = new ArrayList<>();
         for (Event event : events) {
-            Long views = 0L;
+            long views = 0L;
             if (stats != null && !stats.isEmpty()) {
                 views = stats.stream()
                         .filter(f -> Objects.equals(f.getUri(), "/events/" + event.getId()))
