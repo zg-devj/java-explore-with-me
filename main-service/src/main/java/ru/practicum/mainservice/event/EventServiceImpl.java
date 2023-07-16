@@ -207,70 +207,23 @@ public class EventServiceImpl implements EventService {
             throw new BadRequestException("The event does not need confirmation of requests");
         }
 
+        // получаем заявки
+        List<EventRequest> allById = requestRepository.findAllById(updateRequest.getRequestIds());
+
         // если заявки на подтверждения
         if (updateRequest.getStatus() == RequestStatus.CONFIRMED) {
-            // получаем заявки
-            List<EventRequest> allById = requestRepository.findAllById(updateRequest.getRequestIds());
-
-            long confirmedCount = event.getConfirmedRequests();
-
-            // превышен лимит
-            if (event.getParticipantLimit() <= confirmedCount) {
-                throw new ConflictException("The participant limit has been reached",
-                        "For the requested operation the conditions are not met.");
-            }
-
-            boolean isMoreLimit = false;
-            for (EventRequest eventRequest : allById) {
-                if (eventRequest.getStatus() == RequestStatus.PENDING &&
-                        eventRequest.getEvent().getId() == eventId) {
-                    if (event.getParticipantLimit() > confirmedCount) {
-                        // изменяем статус на CONFIRMED
-                        eventRequest.setStatus(RequestStatus.CONFIRMED);
-                        ++confirmedCount;
-                        event.setConfirmedRequests(confirmedCount);
-                    } else {
-                        isMoreLimit = true;
-                        // лимит превышен, изменяем на CANCELLED
-                        eventRequest.setStatus(RequestStatus.CANCELED);
-                    }
-                } else {
-                    // если нет
-                    throw new ConflictException("The status can be changed only for applications " +
-                            "that are in the waiting state.", "The integrity constraint on the change is broken.");
-                }
-            }
-
-            // изменяем заявки
-            eventRepository.save(event);
-            requestRepository.saveAll(allById);
-
-            if (isMoreLimit) {
-                // при достижении лимита, заявки со статусом PENDING
-                // переходят в статус CANCELED
-                requestRepository.updateAllByEventIdAndStatus(eventId, RequestStatus.PENDING);
-            }
+            confirmEventRequest(eventId, event, allById);
         }
 
         // если заявки на отклонения
         if (updateRequest.getStatus() == RequestStatus.REJECTED) {
-            // получаем заявки
-            List<EventRequest> allById = requestRepository.findAllById(updateRequest.getRequestIds());
-            for (EventRequest eventRequest : allById) {
-                if (eventRequest.getStatus() == RequestStatus.PENDING &&
-                        eventRequest.getEvent().getId() == eventId) {
-                    // если статус PENDING
-                    eventRequest.setStatus(RequestStatus.REJECTED);
-                } else {
-                    // если нет
-                    throw new ConflictException("The status can be changed only for applications " +
-                            "that are in the waiting state.", "The integrity constraint on the change is broken.");
-                }
-            }
-            // изменяем заявки
-            requestRepository.saveAll(allById);
+            rejectEventRequest(eventId, allById);
         }
 
+        return getUpdateResult(event);
+    }
+
+    private EventRequestStatusUpdateResult getUpdateResult(Event event) {
         // возвращаем ответ все запросы со статусом не PENDING
         List<EventRequest> resultRequests = requestRepository.findAllByEventIdAndStatusNot(event.getId(), RequestStatus.PENDING);
         // разбиваем по двум спискам
@@ -289,6 +242,63 @@ public class EventServiceImpl implements EventService {
         return updateResult;
     }
 
+    private void rejectEventRequest(long eventId, List<EventRequest> allById) {
+        for (EventRequest eventRequest : allById) {
+            if (eventRequest.getStatus() == RequestStatus.PENDING &&
+                    eventRequest.getEvent().getId() == eventId) {
+                // если статус PENDING
+                eventRequest.setStatus(RequestStatus.REJECTED);
+            } else {
+                // если нет
+                throw new ConflictException("The status can be changed only for applications " +
+                        "that are in the waiting state.", "The integrity constraint on the change is broken.");
+            }
+        }
+        // изменяем заявки
+        requestRepository.saveAll(allById);
+    }
+
+    private void confirmEventRequest(long eventId, Event event, List<EventRequest> allById) {
+        long confirmedCount = event.getConfirmedRequests();
+
+        // превышен лимит
+        if (event.getParticipantLimit() <= confirmedCount) {
+            throw new ConflictException("The participant limit has been reached",
+                    "For the requested operation the conditions are not met.");
+        }
+
+        boolean isMoreLimit = false;
+        for (EventRequest eventRequest : allById) {
+            if (eventRequest.getStatus() == RequestStatus.PENDING &&
+                    eventRequest.getEvent().getId() == eventId) {
+                if (event.getParticipantLimit() > confirmedCount) {
+                    // изменяем статус на CONFIRMED
+                    eventRequest.setStatus(RequestStatus.CONFIRMED);
+                    ++confirmedCount;
+                    event.setConfirmedRequests(confirmedCount);
+                } else {
+                    isMoreLimit = true;
+                    // лимит превышен, изменяем на CANCELLED
+                    eventRequest.setStatus(RequestStatus.CANCELED);
+                }
+            } else {
+                // если нет
+                throw new ConflictException("The status can be changed only for applications " +
+                        "that are in the waiting state.", "The integrity constraint on the change is broken.");
+            }
+        }
+
+        // изменяем заявки
+        eventRepository.save(event);
+        requestRepository.saveAll(allById);
+
+        if (isMoreLimit) {
+            // при достижении лимита, заявки со статусом PENDING
+            // переходят в статус CANCELED
+            requestRepository.updateAllByEventIdAndStatus(eventId, RequestStatus.PENDING);
+        }
+    }
+
     // admin
 
     @Override
@@ -297,8 +307,11 @@ public class EventServiceImpl implements EventService {
         PageRequest pageRequest = getPageRequest(param.getFrom(), param.getSize());
 
         List<Event> events = eventRepository.findAll(isUsersIn(param.getUsers())
-                .and(isCategoriesIn(param.getCategories()))
-                .and(isStatesIn(param.getStates())), pageRequest).getContent();
+                        .and(isCategoriesIn(param.getCategories()))
+                        .and(isStatesIn(param.getStates()))
+                        .and(greaterDate(param.getRangeStart()))
+                        .and(lessDate(param.getRangeEnd())),
+                pageRequest).getContent();
 
         // если список пуст
         if (events.isEmpty()) {
@@ -429,6 +442,8 @@ public class EventServiceImpl implements EventService {
 
         List<Event> events = eventRepository.findAll(
                 isTextAnnotation(param.getText()).or(isTextDescription(param.getText()))
+                        .and(greaterDate(param.getRangeStart()))
+                        .and(lessDate(param.getRangeEnd()))
                         .and(isCategoriesIn(param.getCategories()))
                         .and(isPaid(param.getPaid()))
                         .and(isAvailable(param.isOnlyAvailable())),

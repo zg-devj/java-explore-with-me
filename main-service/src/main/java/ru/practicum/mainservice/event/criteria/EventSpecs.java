@@ -5,6 +5,7 @@ import ru.practicum.mainservice.event.Event;
 import ru.practicum.mainservice.event.EventState;
 import ru.practicum.mainservice.event.Event_;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class EventSpecs {
@@ -72,6 +73,26 @@ public class EventSpecs {
         return (root, query, criteriaBuilder) -> {
             if (onlyAvailable) {
                 return criteriaBuilder.lessThan(root.get(Event_.PARTICIPANT_LIMIT), root.get(Event_.CONFIRMED_REQUESTS));
+            } else {
+                return criteriaBuilder.and();
+            }
+        };
+    }
+
+    public static Specification<Event> greaterDate(LocalDateTime start) {
+        return (root, query, criteriaBuilder) -> {
+            if (start != null) {
+                return criteriaBuilder.greaterThan(root.get(Event_.EVENT_DATE), start);
+            } else {
+                return criteriaBuilder.and();
+            }
+        };
+    }
+
+    public static Specification<Event> lessDate(LocalDateTime end) {
+        return (root, query, criteriaBuilder) -> {
+            if (end != null) {
+                return criteriaBuilder.lessThan(root.get(Event_.EVENT_DATE), end);
             } else {
                 return criteriaBuilder.and();
             }
