@@ -46,10 +46,9 @@ public class EventServiceImpl implements EventService {
     // private
 
     @Override
-    @Transactional(readOnly = true)
     public List<EventShortDto> initiatorGetEvents(long userId, int from, int size) {
 
-        User initiator = getUserCheck(userId);
+        User initiator = getUser(userId);
 
         PageRequest pageRequest = getPageRequest(from, size);
 
@@ -80,8 +79,8 @@ public class EventServiceImpl implements EventService {
         // проверяем время
         checkNewEventDate(newEventDto.getEventDate(), 2);
 
-        User initiator = getUserCheck(userId);
-        Category category = getCategoryCheck(newEventDto.getCategory());
+        User initiator = getUser(userId);
+        Category category = getCategory(newEventDto.getCategory());
         Event newEvent = EventMapper.newEventDtoToEvent(newEventDto, initiator, category);
 
         try {
@@ -94,10 +93,9 @@ public class EventServiceImpl implements EventService {
 
 
     @Override
-    @Transactional(readOnly = true)
     public EventFullDto initiatorGetEvent(long userId, long eventId) {
 
-        Event event = getEventCheck(eventId, userId);
+        Event event = getEvent(eventId, userId);
 
         return getEventFullDto(event, event.getUser());
     }
@@ -106,7 +104,7 @@ public class EventServiceImpl implements EventService {
     @Transactional
     public EventFullDto initiatorUpdateEvent(long userId, long eventId, UpdateEventUserRequest updateEvent) {
 
-        Event event = getEventCheck(eventId, userId);
+        Event event = getEvent(eventId, userId);
 
         // нельзя изменять опубликованное событие
         if (event.getState().equals(EventState.PUBLISHED)) {
@@ -115,7 +113,7 @@ public class EventServiceImpl implements EventService {
         }
 
         if (updateEvent.getCategory() != null) {
-            Category category = getCategoryCheck(updateEvent.getCategory());
+            Category category = getCategory(updateEvent.getCategory());
             event.setCategory(category);
         }
 
@@ -182,7 +180,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<ParticipationRequestDto> initiatorGetEventRequests(long userId, long eventId) {
         // получаем событие инициатора
-        Event event = getEventCheck(eventId, userId);
+        Event event = getEvent(eventId, userId);
         // получаем все заявки на событие инициатора
         List<EventRequest> requests = requestRepository.findAllByEventId(event.getId());
 
@@ -193,7 +191,7 @@ public class EventServiceImpl implements EventService {
     public EventRequestStatusUpdateResult initiatorChangeRequestStatus(
             long userId, long eventId, EventRequestStatusUpdateRequest updateRequest) {
 
-        Event event = getEventCheck(eventId, userId);
+        Event event = getEvent(eventId, userId);
 
         if (updateRequest.getStatus() == RequestStatus.PENDING) {
             // статус нельзя установить в PENDING
@@ -318,23 +316,7 @@ public class EventServiceImpl implements EventService {
             return new ArrayList<>();
         }
 
-        List<Long> eventIds = events.stream()
-                .map(Event::getId)
-                .collect(Collectors.toList());
-
-        LocalDateTime start = param.getRangeStart() != null ?
-                param.getRangeStart() : events.stream()
-                .min(Comparator.comparing(Event::getCreatedOn))
-                .get().getCreatedOn();
-
-        LocalDateTime end = param.getRangeEnd() != null ?
-                param.getRangeEnd() : LocalDateTime.now();
-
-        List<String> uris = eventIds.stream()
-                .map(x -> "/events/" + x)
-                .collect(Collectors.toList());
-
-        List<ViewStatsDto> stats = statsService.getStatsSearch(start, end, false, uris);
+        List<ViewStatsDto> stats = getStats(events, param.getRangeStart(), param.getRangeEnd());
 
         // возвращаем результат
         return EventMapper.eventToEventFullDto(events, stats);
@@ -344,7 +326,7 @@ public class EventServiceImpl implements EventService {
     @Transactional
     public EventFullDto adminUpdateEvent(long eventId, UpdateEventAdminRequest updateEvent) {
 
-        Event event = getEventCheck(eventId);
+        Event event = getEvent(eventId);
 
         User initiator = event.getUser();
 
@@ -372,7 +354,7 @@ public class EventServiceImpl implements EventService {
         }
 
         if (updateEvent.getCategory() != null) {
-            Category newCategory = getCategoryCheck(updateEvent.getCategory());
+            Category newCategory = getCategory(updateEvent.getCategory());
             event.setCategory(newCategory);
         }
 
@@ -454,23 +436,7 @@ public class EventServiceImpl implements EventService {
             return new ArrayList<>();
         }
 
-        List<Long> eventIds = events.stream()
-                .map(Event::getId)
-                .collect(Collectors.toList());
-
-        LocalDateTime start = param.getRangeStart() != null ?
-                param.getRangeStart() : events.stream()
-                .min(Comparator.comparing(Event::getCreatedOn))
-                .get().getCreatedOn();
-
-        LocalDateTime end = param.getRangeEnd() != null ?
-                param.getRangeEnd() : LocalDateTime.now();
-
-        List<String> uris = eventIds.stream()
-                .map(x -> "/events/" + x)
-                .collect(Collectors.toList());
-
-        List<ViewStatsDto> stats = statsService.getStatsSearch(start, end, false, uris);
+        List<ViewStatsDto> stats = getStats(events, param.getRangeStart(), param.getRangeEnd());
 
         List<EventShortDto> list = EventMapper.eventToEventShortDto(events, stats);
 
@@ -478,6 +444,26 @@ public class EventServiceImpl implements EventService {
             Collections.sort(list, Comparator.comparing(EventShortDto::getViews));
         }
         return list;
+    }
+
+    private List<ViewStatsDto> getStats(List<Event> events, LocalDateTime rangeStart, LocalDateTime rangeEnd) {
+        List<Long> eventIds = events.stream()
+                .map(Event::getId)
+                .collect(Collectors.toList());
+
+        LocalDateTime start = rangeStart != null ?
+                rangeStart : events.stream()
+                .min(Comparator.comparing(Event::getCreatedOn))
+                .get().getCreatedOn();
+
+        LocalDateTime end = rangeEnd != null ?
+                rangeEnd : LocalDateTime.now();
+
+        List<String> uris = eventIds.stream()
+                .map(x -> "/events/" + x)
+                .collect(Collectors.toList());
+
+        return statsService.getStatsSearch(start, end, false, uris);
     }
 
     @Override
@@ -508,27 +494,27 @@ public class EventServiceImpl implements EventService {
     }
 
     // получение инициатора по id
-    private User getUserCheck(long userId) {
+    private User getUser(long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(String.format("User with id=%d not found.",
                         userId)));
     }
 
-    private Event getEventCheck(long eventId, long userId) {
+    private Event getEvent(long eventId, long userId) {
         return eventRepository.findFirstByIdAndUserId(eventId, userId)
                 .orElseThrow(() -> new NotFoundException(String.format("Event with id=%d not found.",
                         eventId)));
     }
 
     // получение события по id и инициатору
-    private Event getEventCheck(long eventId) {
+    private Event getEvent(long eventId) {
         return eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException(String.format("Event with id=%d not found.",
                         eventId)));
     }
 
     // получение категории
-    private Category getCategoryCheck(long categoryId) {
+    private Category getCategory(long categoryId) {
         return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new NotFoundException(String.format("Category with id=%d not found.",
                         categoryId)));

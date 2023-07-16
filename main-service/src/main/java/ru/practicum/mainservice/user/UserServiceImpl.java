@@ -17,7 +17,6 @@ import java.util.List;
 import static ru.practicum.mainservice.utils.Util.getPageRequest;
 
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 

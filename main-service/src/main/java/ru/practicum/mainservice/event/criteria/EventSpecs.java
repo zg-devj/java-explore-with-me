@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class EventSpecs {
+
+    // где записи соответствуют пользователям из списка
     public static Specification<Event> isUsersIn(List<Long> users) {
         return (root, query, criteriaBuilder) -> {
             if (users != null && !users.isEmpty()) {
@@ -19,6 +21,7 @@ public class EventSpecs {
         };
     }
 
+    // где записи соответствуют категориям из списка
     public static Specification<Event> isCategoriesIn(List<Long> categories) {
         return (root, query, criteriaBuilder) -> {
             if (categories != null && !categories.isEmpty()) {
@@ -29,6 +32,7 @@ public class EventSpecs {
         };
     }
 
+    // где записи соответствуют состояниям из списка
     public static Specification<Event> isStatesIn(List<EventState> states) {
         return (root, query, criteriaBuilder) -> {
             if (states != null && !states.isEmpty()) {
@@ -39,6 +43,7 @@ public class EventSpecs {
         };
     }
 
+    // поиск только платных/бесплатных событий
     public static Specification<Event> isPaid(Boolean paid) {
         return (root, query, criteriaBuilder) -> {
             if (paid != null) {
@@ -49,6 +54,7 @@ public class EventSpecs {
         };
     }
 
+    // где заданный текст есть в аннотации
     public static Specification<Event> isTextAnnotation(String text) {
         return (root, query, criteriaBuilder) -> {
             if (text != null) {
@@ -59,6 +65,7 @@ public class EventSpecs {
         };
     }
 
+    // где заданный текст есть в описании
     public static Specification<Event> isTextDescription(String text) {
         return (root, query, criteriaBuilder) -> {
             if (text != null) {
@@ -69,6 +76,7 @@ public class EventSpecs {
         };
     }
 
+    // только события у которых не исчерпан лимит запросов на участие
     public static Specification<Event> isAvailable(boolean onlyAvailable) {
         return (root, query, criteriaBuilder) -> {
             if (onlyAvailable) {
@@ -79,6 +87,7 @@ public class EventSpecs {
         };
     }
 
+    // даты после указанной даты
     public static Specification<Event> greaterDate(LocalDateTime start) {
         return (root, query, criteriaBuilder) -> {
             if (start != null) {
@@ -89,6 +98,7 @@ public class EventSpecs {
         };
     }
 
+    // даты раньше указанной даты
     public static Specification<Event> lessDate(LocalDateTime end) {
         return (root, query, criteriaBuilder) -> {
             if (end != null) {

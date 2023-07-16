@@ -26,9 +26,8 @@ public class EventRequestServiceImpl implements EventRequestService {
     private final EventRepository eventRepository;
 
     @Override
-    @Transactional(readOnly = true)
     public List<ParticipationRequestDto> participantGetRequests(long userId) {
-        User requester = getUserCheck(userId);
+        User requester = getUser(userId);
 
         List<EventRequest> requestList = requestRepository.findAllByRequester(requester);
         return EventRequestMapper.eventRequestToParticipationRequestDto(requestList);
@@ -36,11 +35,10 @@ public class EventRequestServiceImpl implements EventRequestService {
 
     @Override
     public ParticipationRequestDto participantAddRequest(long userId, long eventId) {
-        User requestor = getUserCheck(userId);
-        Event event = getEventCheck(eventId);
+        User requestor = getUser(userId);
+        Event event = getEvent(eventId);
 
         long confirmedCount = event.getConfirmedRequests();
-
 
         // если у события достигнут лимит запросов на участие
         if (event.getParticipantLimit() != 0 &&
@@ -77,7 +75,6 @@ public class EventRequestServiceImpl implements EventRequestService {
                 .build();
 
         try {
-
             EventRequest saved = requestRepository.save(eventRequest);
             ParticipationRequestDto requestDto = EventRequestMapper.eventRequestToParticipationRequestDto(saved);
             return requestDto;
@@ -88,7 +85,6 @@ public class EventRequestServiceImpl implements EventRequestService {
     }
 
     @Override
-    @Transactional
     public ParticipationRequestDto participantCancelRequest(long userId, long requestId) {
         EventRequest eventRequest = requestRepository.findFirstByIdAndRequesterId(requestId, userId)
                 .orElseThrow(() -> new NotFoundException(String.format("Request with id=%d not found.",
@@ -101,14 +97,14 @@ public class EventRequestServiceImpl implements EventRequestService {
     }
 
     // получение инициатора по id
-    private User getUserCheck(long userId) {
+    private User getUser(long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(String.format("User with id=%d not found.",
                         userId)));
     }
 
     // получение события по id и инициатору
-    private Event getEventCheck(long eventId) {
+    private Event getEvent(long eventId) {
         return eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException(String.format("Event with id=%d not found.",
                         eventId)));
