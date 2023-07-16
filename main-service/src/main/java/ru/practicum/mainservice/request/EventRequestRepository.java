@@ -3,7 +3,6 @@ package ru.practicum.mainservice.request;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import ru.practicum.mainservice.event.Event;
 import ru.practicum.mainservice.user.User;
 
 import java.util.List;

@@ -3,7 +3,6 @@ package ru.practicum.mainservice.request;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.mainservice.event.Event;
 import ru.practicum.mainservice.event.EventRepository;
 import ru.practicum.mainservice.event.EventState;
@@ -76,8 +75,7 @@ public class EventRequestServiceImpl implements EventRequestService {
 
         try {
             EventRequest saved = requestRepository.save(eventRequest);
-            ParticipationRequestDto requestDto = EventRequestMapper.eventRequestToParticipationRequestDto(saved);
-            return requestDto;
+            return EventRequestMapper.eventRequestToParticipationRequestDto(saved);
         } catch (DataIntegrityViolationException e) {
             throw new ConflictException("The integrity constraint has been violated.", e.getMessage());
         }
