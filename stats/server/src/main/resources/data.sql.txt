@@ -1,0 +1,17 @@
+insert into statistics (app, uri, ip, timestamp)
+values ('main-service', '/events/2', '127.0.0.1', now());
+
+insert into statistics (app, uri, ip, timestamp)
+values ('main-service', '/events/2', '127.0.0.1', now());
+
+insert into statistics (app, uri, ip, timestamp)
+values ('main-service', '/events/2', '127.0.0.2', now());
+
+insert into statistics (app, uri, ip, timestamp)
+values ('main-service', '/events/3', '127.0.0.1', now());
+
+insert into statistics (app, uri, ip, timestamp)
+values ('main-service', '/events/3', '127.0.0.2', now());
+
+insert into statistics (app, uri, ip, timestamp)
+values ('main-service', '/events/4', '127.0.0.1', now());
