@@ -5,6 +5,7 @@ drop table if exists requests;
 drop table if exists events;
 drop table if exists categories;
 drop table if exists users;
+drop table if exists locations;
 
 -- пользователи
 create table if not exists users
@@ -82,6 +83,18 @@ create table if not exists compilation_events
         constraint fk_compilation_events_events references events,
     constraint pk_compilation_events primary key (compilation_id, event_id)
 );
+
+create table if not exists locations
+(
+    id           bigint generated always as identity,
+    name         varchar(100) not null,
+    location_lat real         not null,
+    location_lon real         not null,
+    radius       bigint       not null,
+    status       varchar(9)   not null,
+        constraint pk_users primary key (id)
+);
+
 
 -- CREATE OR REPLACE FUNCTION distance(lat1 float, lon1 float, lat2 float, lon2 float)
 --     RETURNS float
