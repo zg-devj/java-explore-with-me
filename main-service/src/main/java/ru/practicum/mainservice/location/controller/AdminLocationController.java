@@ -26,11 +26,11 @@ public class AdminLocationController {
     // Поиск локаций
     @GetMapping
     public List<LocationDto> adminFindLocations(
-            @RequestParam(required = false) List<LocationStatus> status,
+            @RequestParam(required = false) List<LocationStatus> statuses,
             @RequestParam(defaultValue = "0") @PositiveOrZero int from,
             @RequestParam(defaultValue = "10") @Positive int size
     ) {
-        return locationService.adminFindLocations(status, from, size);
+        return locationService.adminFindLocations(statuses, from, size);
     }
 
     // Добавление локации

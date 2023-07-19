@@ -10,6 +10,20 @@ import java.util.List;
 
 public class EventSpecs {
 
+//    public static Specification<Event> isLoc(Double lat, Double lon, double radius) {
+//        return (root, query, cb) -> {
+//            ParameterExpression latParam = cb.parameter(Double.class);
+//            ParameterExpression lonParam = cb.parameter(Double.class);
+//            ParameterExpression radiusParam = cb.parameter(Double.class);
+//
+//            return cb.greaterThan(cb.function("distance", Double.class,
+//                    root.get(LocationEntity_.LAT),
+//                    root.get(LocationEntity_.LON),
+//                    (Expression<?>) lat,
+//                    (Expression<?>) lon), radius);
+//        };
+//    }
+
     // где записи соответствуют пользователям из списка
     public static Specification<Event> isUsersIn(List<Long> users) {
         return (root, query, criteriaBuilder) -> {
