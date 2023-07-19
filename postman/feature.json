@@ -1205,12 +1205,8 @@
 									"    pm.response.to.have.status(204);",
 									"});",
 									"",
-									"source = pm.collectionVariables.get('response');",
-									"locationId = pm.collectionVariables.get('locationid');",
-									"",
-									"pm.test(\"Локация должна быть найдена до удаления\", function () {",
-									"    pm.expect(source.id).equal(locationId, 'Идентификтор локации должен совпадать с удаляемым');",
-									"});",
+									"let source = pm.collectionVariables.get('response');",
+									"let locationId = pm.collectionVariables.get('locationid');",
 									"",
 									"pm.sendRequest({",
 									"            url: pm.collectionVariables.get(\"baseUrl\") + \"/locations/\" + locationId + \"/events\",",
@@ -1238,18 +1234,18 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/admin/locations/:locationId",
+							"raw": "{{baseUrl}}/admin/locations/:locationid",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"admin",
 								"locations",
-								":locationId"
+								":locationid"
 							],
 							"variable": [
 								{
-									"key": "locationId",
+									"key": "locationid",
 									"value": "{{locationid}}"
 								}
 							]

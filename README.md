@@ -8,7 +8,7 @@
 
 ### Администрирование локаций
 
-> 
+> https://github.com/zg-devj/java-explore-with-me/pull/5
 
 * Администратор
     - может добавить локацию, статус у локации будет Published
