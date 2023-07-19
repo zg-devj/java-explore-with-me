@@ -25,6 +25,7 @@ public class PublicLocationController {
             @RequestParam(defaultValue = "0") @PositiveOrZero int from,
             @RequestParam(defaultValue = "10") @Positive int size
     ) {
+        log.info("GET /locations?from{}&size={} - All published locations.", from, size);
         return locationService.findAllLocations(from, size);
     }
 
@@ -36,6 +37,8 @@ public class PublicLocationController {
             @RequestParam(defaultValue = "0") @PositiveOrZero int from,
             @RequestParam(defaultValue = "10") @Positive int size
     ) {
+        log.info("GET /locations/{}/events?from{}&size={} - Search for an event in the current location.", locationId,
+                from, size);
         return locationService.findEventsInLocation(locationId, from, size);
     }
 }

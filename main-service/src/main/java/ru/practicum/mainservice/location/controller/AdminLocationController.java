@@ -30,14 +30,17 @@ public class AdminLocationController {
             @RequestParam(defaultValue = "0") @PositiveOrZero int from,
             @RequestParam(defaultValue = "10") @Positive int size
     ) {
+        log.info("GET /admin/locations?statuses={}&from={}&size={} - Search for locations.",
+                statuses, from, size);
         return locationService.adminFindLocations(statuses, from, size);
     }
 
-    // Добавление локации
+    // Добавление новой локации
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public LocationDto adminCreateLocation(
             @RequestBody @Valid NewLocationDto newLocationDto) {
+        log.info("POST /admin/locations - Adding a new location.");
         return locationService.adminCreateLocation(newLocationDto);
     }
 
@@ -47,14 +50,17 @@ public class AdminLocationController {
             @PathVariable long locationId,
             @RequestBody @Valid UpdateLocationRequest updateLocationRequest
     ) {
+        log.info("PATCH /admin/locations/{} - Editing location data.", locationId);
         return locationService.adminUpdateLocation(locationId, updateLocationRequest);
     }
 
-    // Удаление локации если она отклонена
+    // Удаление локации
+    // Если она имеет статус REJECTED
     @DeleteMapping("/{locationId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void adminDeleteLocation(
             @PathVariable long locationId) {
+        log.info("DELETE /admin/locations/{} - Deleting a location.", locationId);
         locationService.adminDeleteLocation(locationId);
     }
 }
