@@ -1,9 +1,15 @@
 package ru.practicum.mainservice.location;
 
-import ru.practicum.mainservice.event.EventState;
+import lombok.*;
+import ru.practicum.mainservice.user.User;
 
 import javax.persistence.*;
 
+@Builder
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "locations")
 public class LocationEntity {
@@ -20,6 +26,10 @@ public class LocationEntity {
     private String name;
 
     private long radius;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id")
+    private User owner;
 
     @Enumerated(EnumType.STRING)
     private LocationStatus status;

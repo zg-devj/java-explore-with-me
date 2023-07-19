@@ -13,10 +13,12 @@ public class NewLocationDto {
 
     @NotNull
     private Location location;
+
     @Positive
     @Min(1)
     private Long radius; // радиус в метрах
+
     @NotBlank
-    @Size(min = 3, max = 100)
+    @Size(min = 3, max = 250)
     private String name;
 }
