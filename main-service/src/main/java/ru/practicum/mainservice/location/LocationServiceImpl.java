@@ -11,10 +11,7 @@ import ru.practicum.mainservice.event.criteria.EventSearch;
 import ru.practicum.mainservice.event.dto.Location;
 import ru.practicum.mainservice.exceptions.NotFoundException;
 import ru.practicum.mainservice.location.criteria.LocationSpecs;
-import ru.practicum.mainservice.location.dto.LocationDto;
-import ru.practicum.mainservice.location.dto.LocationEventsDto;
-import ru.practicum.mainservice.location.dto.NewLocationDto;
-import ru.practicum.mainservice.location.dto.UpdateLocationRequest;
+import ru.practicum.mainservice.location.dto.*;
 import ru.practicum.mainservice.services.StatsService;
 import ru.practicum.mainservice.user.User;
 import ru.practicum.mainservice.user.UserRepository;
@@ -39,12 +36,12 @@ public class LocationServiceImpl implements LocationService {
     // admin
 
     @Override
-    public List<LocationDto> adminFindLocations(List<LocationStatus> statuses, int from, int size) {
+    public List<LocationFullDto> adminFindLocations(List<LocationStatus> statuses, int from, int size) {
         PageRequest pageRequest = getPageRequest(from, size);
         List<LocationEntity> locations = locationRepository.findAll(
                 LocationSpecs.isLocationStatusIn(statuses),
                 pageRequest).getContent();
-        return LocationMapper.locationToLocationDto(locations);
+        return LocationMapper.locationToLocationFullDto(locations);
     }
 
     @Override

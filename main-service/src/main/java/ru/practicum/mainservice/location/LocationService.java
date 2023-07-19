@@ -1,9 +1,6 @@
 package ru.practicum.mainservice.location;
 
-import ru.practicum.mainservice.location.dto.LocationDto;
-import ru.practicum.mainservice.location.dto.LocationEventsDto;
-import ru.practicum.mainservice.location.dto.NewLocationDto;
-import ru.practicum.mainservice.location.dto.UpdateLocationRequest;
+import ru.practicum.mainservice.location.dto.*;
 
 import java.util.List;
 
@@ -11,7 +8,7 @@ public interface LocationService {
 
     // admin
 
-    List<LocationDto> adminFindLocations(List<LocationStatus> statuses, int from, int size);
+    List<LocationFullDto> adminFindLocations(List<LocationStatus> statuses, int from, int size);
 
     LocationDto adminCreateLocation(NewLocationDto newLocationDto);
 

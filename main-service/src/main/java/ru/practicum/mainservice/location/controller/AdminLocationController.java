@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.mainservice.location.LocationService;
 import ru.practicum.mainservice.location.LocationStatus;
 import ru.practicum.mainservice.location.dto.LocationDto;
+import ru.practicum.mainservice.location.dto.LocationFullDto;
 import ru.practicum.mainservice.location.dto.NewLocationDto;
 import ru.practicum.mainservice.location.dto.UpdateLocationRequest;
 
@@ -25,7 +26,7 @@ public class AdminLocationController {
 
     // Поиск локаций
     @GetMapping
-    public List<LocationDto> adminFindLocations(
+    public List<LocationFullDto> adminFindLocations(
             @RequestParam(required = false) List<LocationStatus> statuses,
             @RequestParam(defaultValue = "0") @PositiveOrZero int from,
             @RequestParam(defaultValue = "10") @Positive int size
