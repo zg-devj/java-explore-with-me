@@ -1,11 +1,11 @@
 -- для тестирования
+drop table if exists locations;
 drop table if exists compilation_events;
 drop table if exists compilations;
 drop table if exists requests;
 drop table if exists events;
 drop table if exists categories;
 drop table if exists users;
-drop table if exists locations;
 
 -- пользователи
 create table if not exists users
@@ -33,8 +33,8 @@ create table if not exists events
     title              varchar(120)                not null,
     user_id            bigint                      not null,
     category_id        bigint                      not null,
-    location_lat       real                        not null,
-    location_lon       real                        not null,
+    location_lat       decimal                     not null,
+    location_lon       decimal                     not null,
     annotation         varchar(2000)               not null,
     description        varchar(7000)               not null,
     created_on         timestamp without time zone not null default now(),
@@ -87,12 +87,14 @@ create table if not exists compilation_events
 create table if not exists locations
 (
     id           bigint generated always as identity,
-    name         varchar(100) not null,
-    location_lat real         not null,
-    location_lon real         not null,
+    name         varchar(250) not null,
+    location_lat decimal      not null,
+    location_lon decimal      not null,
     radius       bigint       not null,
     status       varchar(9)   not null,
-        constraint pk_users primary key (id)
+    owner_id     bigint       null,
+    constraint pk_locations primary key (id),
+    constraint fk_locations_users foreign key (owner_id) references users (id)
 );
 
 
