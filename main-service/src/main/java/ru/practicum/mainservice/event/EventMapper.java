@@ -7,7 +7,6 @@ import ru.practicum.mainservice.category.Category;
 import ru.practicum.mainservice.category.CategoryMapper;
 import ru.practicum.mainservice.event.dto.EventFullDto;
 import ru.practicum.mainservice.event.dto.EventShortDto;
-import ru.practicum.mainservice.event.dto.Location;
 import ru.practicum.mainservice.event.dto.NewEventDto;
 import ru.practicum.mainservice.user.User;
 import ru.practicum.mainservice.user.UserMapper;
@@ -52,10 +51,6 @@ public class EventMapper {
     }
 
     public static EventFullDto eventToEventFullDto(Event event, UserShortDto userShortDto, long views) {
-        Location location = Location.builder()
-                .lat(event.getLat())
-                .lon(event.getLon()).build();
-
         EventFullDto eventFullDto = new EventFullDto();
         eventFullDto.setAnnotation(event.getAnnotation());
         eventFullDto.setCategory(CategoryMapper.categoryToCategoryDto(event.getCategory()));
@@ -65,7 +60,7 @@ public class EventMapper {
         eventFullDto.setEventDate(event.getEventDate());
         eventFullDto.setId(event.getId());
         eventFullDto.setInitiator(userShortDto);
-        eventFullDto.setLocation(location);
+        eventFullDto.setLocation(LocationMapper.coordsToLocation(event.getLat(), event.getLon()));
         eventFullDto.setPaid(event.getPaid());
         eventFullDto.setParticipantLimit(event.getParticipantLimit());
         eventFullDto.setPublishedOn(event.getPublishedOn());

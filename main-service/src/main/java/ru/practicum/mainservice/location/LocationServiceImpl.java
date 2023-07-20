@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.common.ViewStatsDto;
 import ru.practicum.mainservice.event.Event;
 import ru.practicum.mainservice.event.EventMapper;
+import ru.practicum.mainservice.event.LocationMapper;
 import ru.practicum.mainservice.event.criteria.EventSearch;
 import ru.practicum.mainservice.event.dto.Location;
 import ru.practicum.mainservice.exceptions.NotFoundException;
@@ -41,13 +42,13 @@ public class LocationServiceImpl implements LocationService {
         List<LocationEntity> locations = locationRepository.findAll(
                 LocationSpecs.isLocationStatusIn(statuses),
                 pageRequest).getContent();
-        return LocationMapper.locationToLocationFullDto(locations);
+        return LocationEntityMapper.locationToLocationFullDto(locations);
     }
 
     @Override
     public LocationDto adminCreateLocation(NewLocationDto newLocationDto) {
         // Добавление опубликованной локации администратором
-        return getLocationDto(newLocationDto, LocationStatus.PUBLISHED, null);
+        return saveLocation(newLocationDto, LocationStatus.PUBLISHED, null);
     }
 
     @Override
@@ -78,7 +79,7 @@ public class LocationServiceImpl implements LocationService {
         }
 
         LocationEntity updated = locationRepository.save(location);
-        return LocationMapper.locationToLocationDto(updated);
+        return LocationEntityMapper.locationToLocationDto(updated);
     }
 
     // Удаление локации если она REJECTED
@@ -95,7 +96,7 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public LocationDto initiatorAddLocation(long userId, NewLocationDto newLocationDto) {
         User user = getUser(userId);
-        return getLocationDto(newLocationDto, LocationStatus.PENDING, user);
+        return saveLocation(newLocationDto, LocationStatus.PENDING, user);
     }
 
     // public
@@ -105,7 +106,7 @@ public class LocationServiceImpl implements LocationService {
     public List<LocationDto> findAllLocations(int from, int size) {
         PageRequest pageRequest = getPageRequest(from, size);
         List<LocationEntity> locations = locationRepository.findAllByStatus(LocationStatus.PUBLISHED, pageRequest);
-        return LocationMapper.locationToLocationDto(locations);
+        return LocationEntityMapper.locationToLocationDto(locations);
     }
 
     // Получение опубликованных событий в локации
@@ -125,9 +126,7 @@ public class LocationServiceImpl implements LocationService {
         result.setId(location.getId());
         result.setName(location.getName());
         result.setRadius(location.getRadius());
-        result.setLocation(Location.builder()
-                .lat(location.getLat()).lon(location.getLon())
-                .build());
+        result.setLocation(LocationMapper.coordsToLocation(location.getLat(), location.getLon()));
 
         if (events.isEmpty()) {
             // если список пуст
@@ -166,11 +165,11 @@ public class LocationServiceImpl implements LocationService {
     }
 
     // Добавление локации
-    private LocationDto getLocationDto(NewLocationDto newLocationDto, LocationStatus status, User owner) {
-        LocationEntity newLocation = LocationMapper.newLocationDtoToLocation(newLocationDto,
+    private LocationDto saveLocation(NewLocationDto newLocationDto, LocationStatus status, User owner) {
+        LocationEntity newLocation = LocationEntityMapper.newLocationDtoToLocation(newLocationDto,
                 status, owner);
         LocationEntity saved = locationRepository.save(newLocation);
-        return LocationMapper.locationToLocationDto(saved);
+        return LocationEntityMapper.locationToLocationDto(saved);
     }
 
     // Получение инициатора по id
