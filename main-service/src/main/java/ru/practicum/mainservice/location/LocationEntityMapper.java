@@ -3,7 +3,6 @@ package ru.practicum.mainservice.location;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import ru.practicum.mainservice.event.LocationMapper;
-import ru.practicum.mainservice.event.dto.Location;
 import ru.practicum.mainservice.location.dto.LocationDto;
 import ru.practicum.mainservice.location.dto.LocationFullDto;
 import ru.practicum.mainservice.location.dto.NewLocationDto;

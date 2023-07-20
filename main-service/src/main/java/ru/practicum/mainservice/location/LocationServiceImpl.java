@@ -9,7 +9,6 @@ import ru.practicum.mainservice.event.Event;
 import ru.practicum.mainservice.event.EventMapper;
 import ru.practicum.mainservice.event.LocationMapper;
 import ru.practicum.mainservice.event.criteria.EventSearch;
-import ru.practicum.mainservice.event.dto.Location;
 import ru.practicum.mainservice.exceptions.NotFoundException;
 import ru.practicum.mainservice.location.criteria.LocationSpecs;
 import ru.practicum.mainservice.location.dto.*;
