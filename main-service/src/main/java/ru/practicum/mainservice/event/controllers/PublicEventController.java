@@ -49,7 +49,6 @@ public class PublicEventController {
             @RequestParam(defaultValue = "10") @Positive int size,
             HttpServletRequest request
     ) {
-        System.out.println(request.getRequestURI());
         LocalDateTime start = decodedDateTime(rangeStart);
         LocalDateTime end = decodedDateTime(rangeEnd);
 
