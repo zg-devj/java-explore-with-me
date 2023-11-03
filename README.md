@@ -6,6 +6,9 @@
 ### Описание
 Приложение ExploreWithMe (англ. «исследуй со мной») позволит пользователям делиться информацией об интересных событиях и находить компанию для участия в них.
 
+### Стек
+Java 11, REST API, SpringBook, Maven, JPA, Lombok, PostgreSQL, Docker
+
 ### Администрирование локаций
 
 > https://github.com/zg-devj/java-explore-with-me/pull/5
